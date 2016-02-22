@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,12 +17,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     customsurvey.cpp \
     flexiblesurvey.cpp \
-    questiondata.cpp
+    questiondata.cpp \
+    dbmanager.cpp \
+    filemanager.cpp \
+    surveytype.cpp
 
 HEADERS  += mainwindow.h \
     customsurvey.h \
     flexiblesurvey.h \
-    questiondata.h
+    questiondata.h \
+    dbmanager.h \
+    filemanager.h \
+    surveytype.h
 
 FORMS    += mainwindow.ui \
     customsurvey.ui \
