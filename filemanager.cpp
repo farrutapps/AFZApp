@@ -7,12 +7,12 @@
  *
  * _ASK for name of ORT, save to DB
  * _DATE
- *
+ * _CLEAR DATABASE BUTTON
  * */
 
 FileManager::FileManager(QString path, int stype_id) : file_path(path), surveytype_id(stype_id)
 {
-db_man.setpath("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/Feedbacker_db.db");
+db_man.setpath("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/feedbacker.db");
 ReadCsv();
 ReadSurveytypes();
 ReadDataToQuestions();
@@ -93,7 +93,7 @@ void FileManager::ReadDataToQuestions(){
 
 
         for (int i=0; i<m;++i){
-            questions[i].write_questiontype(questiontypes[surveytype_id][i].toInt());
+            questions[i].write_questiontype(question_types[surveytype_id][i].toInt());
         }
 
     }
@@ -113,17 +113,51 @@ void FileManager::ReadSurveytypes(){
 
     for (int i=0; i<surveytypes_size; ++i){
         question_types[i].resize(questiontypes_size);
-        db_man.select_single_query("SELECT type FROM qtypes WHERE surveytype_id = " + (i+1),"type",question_types[i] );
+        db_man.select_single_query("SELECT type FROM qtypes WHERE surveytype_id = " + QString::number(i+1),"type",question_types[i] );
     }
 }
 
 void FileManager::WriteSurveyToDb(){
-    db_man.insert_query("INSERT INTO surveys VALUES (NULL,"+surveytype_id+",'Ort', '02/24/2015' )");
 
+    // INSERT SURVEY
+    db_man.insert_query("INSERT INTO surveys VALUES (NULL," + QString::number(surveytype_id) + ",'Ort', '02/24/2015' )");
+
+    vector <QString> temp_survey_id;
+    db_man.select_single_query("SELECT last_insert_rowid() FROM surveys", "last_insert_rowid()",temp_survey_id);
+
+    vector <QString> temp_mainquestion_id;
+    vector <QString> temp_subquestion_id;
+    vector <int> temp_data;
+
+
+    // INSERT QUESTIONS WITH SUBQUESTIONS
     for (int i=0; i<questions.size();++i){
-    db_man.insert_query("INSERT INTO questions VALUES(NULL,last_insert_rowid(), "+questions[i].read_question()+"," + questions[i].read_question_type() + ")");
-// NEXT UP: subquestions
+
+        if (questions[i].read_question() != ""){
+
+            db_man.insert_query("INSERT INTO questions VALUES(NULL, "+ temp_survey_id[0] +", "+ questions[i].read_question()+"," + questions[i].read_question_type() + ")");
+
+            temp_mainquestion_id.clear();
+            db_man.select_single_query("SELECT last_insert_rowid() FROM questions", "last_insert_rowid()",temp_mainquestion_id);
+        }
+
+        db_man.insert_query("INSERT INTO subquestions VALUES(NULL, " + temp_mainquestion_id[0] +", " + questions[i].read_subquestion() + " )");
+        
+
+         // NOW INSERT DATA CONNECTED TO SUBQUESTIONS
+        temp_subquestion_id.clear();
+        db_man.select_single_query("SELECT last_insert_rowid() FROM subquestions", "last_insert_rowid()",temp_subquestion_id);
+
+        temp_data.clear();
+        temp_data=questions[i].read_data();
+        for (int j=0; j<temp_data.size(); ++j){
+
+            db_man.insert_query("INSERT INTO data VALUES(NULL, " + temp_subquestion_id[0] + ", " + QString::number(temp_data[j]) +")");
+        }
+
     }
+
+    cout << "SURVEY WRITTEN TO DATABASE!" << endl;
 }
 
 

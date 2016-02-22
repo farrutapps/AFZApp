@@ -36,7 +36,7 @@ private:
     QString file_path;
     int surveytype_id;
     DbManager db_man;
-    vector <vector <QString>> question_types;
+    vector <vector <QString> > question_types;
 
 
     vector <vector <string> > datamatrix;
