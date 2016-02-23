@@ -45,7 +45,9 @@ private:
     vector <vector <string> > datamatrix;
     vector <vector <double> > fb_values;
     vector <string> fb_headers;
-    vector <questiondata> samples;
+    vector <questiondata> questions;
+
+
 
     vector <int> questiontypes_DA_TS;
     vector <int> questiontypes_DA_FBS;

@@ -19,7 +19,7 @@ FileManager::FileManager(){}
 FileManager::FileManager(QString path, int stype_id) : file_path(path), surveytype_id(stype_id)
 {
 //run and connect database
-db_man = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/feedbacker.db");
+db_man = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 ReadSurveytypes();
 
 ReadCsv();
@@ -91,7 +91,6 @@ void FileManager::ReadDataToQuestions(){
 
     for(int i=0; i<m;++i){
         questions[i].write_questiontype(question_types[surveytype_id][i].toInt());
-
         questions[i].write_question(QString::fromStdString(datamatrix[0][i]));
         questions[i].write_subquestion(QString::fromStdString(datamatrix[1][i]));
         questions[i].write_data_fromStdString(datamatrix,i);
@@ -104,22 +103,21 @@ void FileManager::ReadDataToQuestions(){
     }
 
 
-    cout << "DATA READ INTO SAMPLES" << endl;
+    cout << "DATA READ INTO QUESTIONDATA" << endl;
 
 }
 
 void FileManager::ReadSurveytypes(){
 
     int surveytypes_size =0;
-    db_man->count_lines("surveys",surveytypes_size);
+    db_man->count_lines("surveytypes",surveytypes_size);
     question_types.resize(surveytypes_size);
 
-    int questiontypes_size =0;
-
     for (int i=0; i<surveytypes_size; ++i){
-        question_types[i].resize(questiontypes_size);
-        db_man->select_single_query("SELECT type FROM qtypes WHERE surveytype_id = " + QString::number(i+1),"type",question_types[i] );
+        db_man->select_single_query("SELECT qtype FROM qtypes WHERE surveytype_id = " + QString::number(i),"qtype",question_types[i] );
     }
+
+    cout << "SURVEYTYPES READ FROM DB" << endl;
 }
 
 void FileManager::WriteSurveyToDb(){

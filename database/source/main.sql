@@ -8,7 +8,7 @@
 -- using foreign keys
 
 -- CREATE TABLES
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/sourcesurveytypes.SQL
+.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveytypes.SQL
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/qtypes.SQL
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveys.SQL
 --.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/questiontypes.SQL
@@ -17,4 +17,4 @@
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/data.sql
 
 -- FILL TABLE
-.read C:/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL
+.read /Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL
