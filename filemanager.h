@@ -20,6 +20,7 @@ using namespace std;
 class FileManager
 {
 public:
+    FileManager();
     FileManager(QString path, int surveytype_id);
 
     void ReadCsv();
@@ -29,13 +30,13 @@ public:
     void WriteSurveyToDb();
 
 
-    
+    vector <questiondata> get_questions();
 
 
 private:
     QString file_path;
     int surveytype_id;
-    DbManager db_man;
+    DbManager *db_man;
     vector <vector <QString> > question_types;
 
 

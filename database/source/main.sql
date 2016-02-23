@@ -17,4 +17,4 @@
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/data.sql
 
 -- FILL TABLE
---.read C:/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL
+.read C:/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL

@@ -14,7 +14,7 @@ DbManager::DbManager(const QString& path)
         cout << "database connection ok!" << endl;
     }
 }
-
+/*
 void DbManager::setpath(QString path){
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName(path);
@@ -26,7 +26,7 @@ void DbManager::setpath(QString path){
         cout << "database connection ok!" << endl;
     }
 }
-
+*/
 bool DbManager::select_query(QString sql_query,vector <QString> &column_names,vector < vector <QString> > &output){
     // can output one column
 

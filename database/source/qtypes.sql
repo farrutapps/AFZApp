@@ -12,9 +12,7 @@ DROP TABLE IF EXISTS qtypes;
 CREATE TABLE qtypes(
 id INTEGER PRIMARY KEY,
 surveytype_id INT,
-qtype INT,
-qtype_name VARCHAR (35),
-cpp_method VARCHAR (35),
+qtype INT
 
 FOREIGN KEY (surveytype_id) REFERENCES surveytypes(id)
 );

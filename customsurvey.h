@@ -7,6 +7,8 @@ using namespace std;
 #include <fstream>
 #include <cassert>
 #include <questiondata.h>
+#include "filemanager.h"
+# include "dbmanager.h"
 
 namespace Ui {
 class CustomSurvey;
@@ -49,6 +51,9 @@ private:
     vector <int> questiontypes_DA_FBS;
     vector <int> questiontypes_BAN_TS;
     vector <int> questiontypes_BAN_FBS;
+
+    DbManager *db_man;
+    FileManager *f_man;
 
 };
 

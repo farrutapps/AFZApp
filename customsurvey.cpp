@@ -11,8 +11,10 @@ CustomSurvey::CustomSurvey(QWidget *parent) :
     ui(new Ui::CustomSurvey)
 {
     ui->setupUi(this);
+    db_man= new DbManager("users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/feedbacker.db");
     BuildCombo();
     ui->ShowWindow->setReadOnly(true);
+
 
     // 0 - ignore
     // 1 - average value
@@ -21,12 +23,13 @@ CustomSurvey::CustomSurvey(QWidget *parent) :
     // 4 - age
     // 5 - School type
     // 6 - text
-
+/*
    int question_types_DA_TS[] =  {0,0,0,0,0,0,0,0,0,1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,6,6,6,4,3,5,0,0}; //fill here according to survey
    int question_types_DA_FBS[]={0};
-   int question_types_BAN_TS[]=  {1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,4,3,5};
+   int question_types_BAN_TS[]=  {0};
    int question_types_BAN_FBS[]={0};
-
+*/
+    /*
    for (int i =0; i<sizeof(question_types_DA_TS)/sizeof(int);++i)
        questiontypes_DA_TS.push_back(question_types_DA_TS[i]);
 
@@ -39,6 +42,7 @@ CustomSurvey::CustomSurvey(QWidget *parent) :
 
   for (int i =0; i<sizeof(question_types_BAN_FBS)/sizeof(int);++i)
        questiontypes_BAN_FBS.push_back(question_types_BAN_FBS[i]);
+*/
 }
 
 CustomSurvey::~CustomSurvey()
@@ -47,6 +51,8 @@ CustomSurvey::~CustomSurvey()
 }
 
 void CustomSurvey::on_DirectoryButton_clicked(){
+
+
 
    /* filename = QFileDialog::getOpenFileUrl(this,
         tr("Open Image"), "/Users/Sebastian", tr("Image Files (*.png *.jpg *.bmp)"));
@@ -57,9 +63,12 @@ void CustomSurvey::on_DirectoryButton_clicked(){
 
     ui->DirectoryTextBox->appendPlainText(file.path());
 
-    cout << "CSV SCCESSFULLY LOADED" << endl;
+    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex());
 
-    ReadCsv(file.path().toStdString());
+  //  cout << "CSV SCCESSFULLY LOADED" << endl;
+
+
+   // ReadCsv(file.path().toStdString());
 
 }
 
@@ -164,9 +173,6 @@ void CustomSurvey::ExtractNumbers(){
 
 void CustomSurvey::on_GoButton_clicked(){
 
-    // read data into samples
-    ReadDataToSamples();
-    //SortSamples();
     DisplayStatistics();
 
 }
@@ -185,10 +191,14 @@ void CustomSurvey::on_ClearButton_clicked(){
 
 void CustomSurvey::BuildCombo(){
 
-    ui->SurveyTypeBox->addItem("Deine Anne Trainingsseminar");
-    ui->SurveyTypeBox->addItem("Eine Geschichte für Heute Trainingsseminar");
-    ui->SurveyTypeBox->addItem("Deine Anne Feedbackseminar");
-    ui->SurveyTypeBox->addItem("Eine Geschichte für Heute Feedbackseminar");
+    vector <QString> Surveytypes;
+
+    db_man->select_single_query("SELECT name FROM surveytypes", "name", Surveytypes);
+
+    for(int i =0; i<Surveytypes.size();++i){
+    ui->SurveyTypeBox->addItem(Surveytypes[i]);
+    }
+
 }
 
 void CustomSurvey::on_WriteFile_Button_clicked(){
@@ -319,22 +329,22 @@ void CustomSurvey::DisplayStatistics(){
     ui->ShowWindow->append(introduction);
     ui->ShowWindow->append("");
 
-
+    vector <questiondata> questions = f_man->get_questions();
 
     for (int i=0; i<samples.size();++i){
      // display statistical results, if question type is not unknown and is not a text question.
-        if(samples[i].read_question_type()!=0 && samples[i].read_question_type()!=6  ){
+        if(questions[i].read_question_type()!=0 && questions[i].read_question_type()!=6  ){
 
-            QString MainQuestion="<b>"+samples[i].read_question()+"</b>";
-            QString SubQuestion=samples[i].read_subquestion();
+            QString MainQuestion="<b>"+questions[i].read_question()+"</b>";
+            QString SubQuestion=questions[i].read_subquestion();
 
-            if(samples[i].read_question()!="")
+            if(questions[i].read_question()!="")
             ui->ShowWindow->append(MainQuestion);
 
-            if(samples[i].read_subquestion()!="")
+            if(questions[i].read_subquestion()!="")
                 ui->ShowWindow->append(SubQuestion);
 
-            ui->ShowWindow->append(samples[i].read_stat_val_string());
+            ui->ShowWindow->append(questions[i].read_stat_val_string());
             ui->ShowWindow->append("");
         }
         else {
@@ -344,7 +354,7 @@ void CustomSurvey::DisplayStatistics(){
     }
 
     ui->ShowWindow->append("<b>Teilnehmende insgesamt:</b>");
-    int size =datamatrix.size()-2;
+    int size = questions[0].read_data().size();
     ui->ShowWindow->append(QString::number(size));
     ui->ShowWindow->moveCursor(QTextCursor::Start);
 }
