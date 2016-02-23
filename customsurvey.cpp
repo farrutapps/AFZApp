@@ -15,34 +15,6 @@ CustomSurvey::CustomSurvey(QWidget *parent) :
     BuildCombo();
     ui->ShowWindow->setReadOnly(true);
 
-
-    // 0 - ignore
-    // 1 - average value
-    // 2 - share of non zeros // do you agree with
-    // 3 - gender
-    // 4 - age
-    // 5 - School type
-    // 6 - text
-/*
-   int question_types_DA_TS[] =  {0,0,0,0,0,0,0,0,0,1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1,6,6,6,4,3,5,0,0}; //fill here according to survey
-   int question_types_DA_FBS[]={0};
-   int question_types_BAN_TS[]=  {0};
-   int question_types_BAN_FBS[]={0};
-*/
-    /*
-   for (int i =0; i<sizeof(question_types_DA_TS)/sizeof(int);++i)
-       questiontypes_DA_TS.push_back(question_types_DA_TS[i]);
-
-
-  for (int i =0; i<sizeof(question_types_DA_FBS)/sizeof(int);++i)
-       questiontypes_DA_FBS.push_back(question_types_DA_FBS[i]);
-
-  for (int i =0; i<sizeof(question_types_BAN_TS)/sizeof(int);++i)
-       questiontypes_BAN_TS.push_back(question_types_BAN_TS[i]);
-
-  for (int i =0; i<sizeof(question_types_BAN_FBS)/sizeof(int);++i)
-       questiontypes_BAN_FBS.push_back(question_types_BAN_FBS[i]);
-*/
 }
 
 CustomSurvey::~CustomSurvey()
@@ -60,7 +32,7 @@ void CustomSurvey::on_DirectoryButton_clicked(){
 
     cout << "INITIATE FILEMANAGER" << endl;
 
-    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex());
+    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex(),db_man);
 
      questions = f_man->get_questions();
 
@@ -75,15 +47,11 @@ void CustomSurvey::on_GoButton_clicked(){
 }
 
 void CustomSurvey::on_ClearButton_clicked(){
+
     ui->ShowWindow->moveCursor(QTextCursor::End);
     ui->ShowWindow->clear();
-  //  samples.clear();                          // TODO: CLEAR SAMPLES
-    fb_values.clear();
-    fb_headers.clear();
-    datamatrix.clear();
     ui->DirectoryTextBox->clear();
-
-
+    delete f_man;
 }
 
 void CustomSurvey::BuildCombo(){
@@ -116,12 +84,7 @@ void CustomSurvey::on_WriteFile_Button_clicked(){
     QString filepath=directory[0].path();
     filepath=filepath+"/"+filename;
 
-    cout << "filepath: " << filepath.toStdString() << endl;
-
-     ofstream myfile;
-     myfile.open (filepath.toStdString().c_str());
-     myfile << text.toStdString().c_str();
-     myfile.close();
+    f_man->saveToTextFile(filepath,text);
 
 }
 
@@ -130,8 +93,6 @@ void CustomSurvey::DisplayStatistics(){
     QString introduction = "<i>Falls nicht anders angegeben, wurden die Mittelwerte der Antworten ermittelt. Möchgliche Antworten waren: 1,2,3,4. Für die Wanderausstellungen giltet: 1 bedeutet volle Zusstimmung, 4 gar keine Zustimmung <\i>" ;
     ui->ShowWindow->append(introduction);
     ui->ShowWindow->append("");
-
-
 
     for (int i=0; i<questions.size();++i){
      // display statistical results, if question type is not unknown and is not a text question.
@@ -149,10 +110,6 @@ void CustomSurvey::DisplayStatistics(){
             ui->ShowWindow->append(questions[i].read_stat_val_string());
             ui->ShowWindow->append("");
         }
-        else {
-            cout << "QUESTION IGNORED" << endl;
-        }
-
     }
 
     ui->ShowWindow->append("<b>Teilnehmende insgesamt:</b>");

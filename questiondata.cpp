@@ -63,6 +63,8 @@ void questiondata::calc_stat_val(){
 
     switch (questiontype) {
 
+    /** see README in Database folder for explanation of questiontype index. **/
+
     case 1: //mean value
         statistical_value= qRound(mean_value()*100.0)/100.0;
         stat_val_string=QString::number(statistical_value);
@@ -198,8 +200,6 @@ double questiondata::mean_value(){
     }
 
     result =sum/(double)(data.size()-numberofnd);
-
-    cout << "CALCULATED MEAN VALUE!" << endl;
     return result;
 
 }
@@ -217,7 +217,7 @@ double questiondata::share_of_non_zeros(){
     }
 
     share=((double)counter/(double)data.size());
- cout << "NON ZEROOOES" << endl;
+
     return share;
 }
 

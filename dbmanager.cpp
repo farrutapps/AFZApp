@@ -68,7 +68,6 @@ bool DbManager::select_single_query(QString sql_query,QString column_name,vector
     query.prepare(sql_query);
 
     success = query.exec();
-    cout << query.executedQuery().toStdString() << endl;
 
     if (!success){
         cout << "select_single_query error: " << query.lastError().text().toStdString() << endl;
@@ -106,7 +105,6 @@ bool DbManager::count_lines(QString table, int &result){
     query.prepare("SELECT COUNT(rowid) FROM " + table);
 
     success = query.exec();
-    cout << query.executedQuery().toStdString() << endl;
 
     if (!success){
         cout << "count_query error: " << query.lastError().text().toStdString() << endl;

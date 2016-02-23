@@ -2,7 +2,7 @@
 #define FILEMANAGER_H
 
 #include "questiondata.h"
-#include "surveytype.h"
+
 
 #include <QWidget>
 #include <iostream>
@@ -21,7 +21,7 @@ class FileManager
 {
 public:
     FileManager();
-    FileManager(QString path, int surveytype_id);
+    FileManager(QString path, int surveytype_id, DbManager *database_man);
 
     void ReadCsv();
     void ReadDataToQuestions();
@@ -29,6 +29,7 @@ public:
 
     void WriteSurveyToDb();
 
+    void saveToTextFile(QString, QString );
 
     vector <questiondata> get_questions();
 

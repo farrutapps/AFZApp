@@ -16,10 +16,9 @@
 
 FileManager::FileManager(){}
 
-FileManager::FileManager(QString path, int stype_id) : file_path(path), surveytype_id(stype_id)
+FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : file_path(path), surveytype_id(stype_id), db_man(database_man)
 {
-//run and connect database
-db_man = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
+
 ReadSurveytypes();
 
 ReadCsv();
@@ -165,4 +164,13 @@ void FileManager::WriteSurveyToDb(){
 
 vector <questiondata> FileManager::get_questions(){
     return questions;
+}
+
+void FileManager::saveToTextFile(QString filepath, QString text){
+    cout << "filepath: " << filepath.toStdString() << endl;
+
+     ofstream myfile;
+     myfile.open (filepath.toStdString().c_str());
+     myfile << text.toStdString().c_str();
+     myfile.close();
 }
