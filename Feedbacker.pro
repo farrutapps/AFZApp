@@ -19,15 +19,18 @@ SOURCES += main.cpp\
     flexiblesurvey.cpp \
     questiondata.cpp \
     dbmanager.cpp \
-    filemanager.cpp
+    filemanager.cpp \
+    dbwindow.cpp
 
 HEADERS  += mainwindow.h \
     customsurvey.h \
     flexiblesurvey.h \
     questiondata.h \
     dbmanager.h \
-    filemanager.h
+    filemanager.h \
+    dbwindow.h
 
 FORMS    += mainwindow.ui \
     customsurvey.ui \
-    flexiblesurvey.ui
+    flexiblesurvey.ui \
+    dbwindow.ui

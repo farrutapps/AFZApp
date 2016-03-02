@@ -1,0 +1,10 @@
+TODOS Feedbacker Project
+
+_Saving to DB: ask for ORT and DATE first
+
+_Database management rider
+	_display surveys
+	_delete surveys
+	_set db path
+
+_Implement Text Questions

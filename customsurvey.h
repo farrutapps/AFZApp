@@ -19,7 +19,7 @@ class CustomSurvey : public QWidget
     Q_OBJECT
 
 public:
-    explicit CustomSurvey(QWidget *parent = 0);
+    explicit CustomSurvey(QWidget *parent = 0, DbManager *db_manager=0);
     ~CustomSurvey();
 
 
@@ -32,6 +32,7 @@ public slots:
     void on_GoButton_clicked();
     void on_ClearButton_clicked();
     void on_WriteFile_Button_clicked();
+    void on_ToDbButton_clicked();
 
 private:
     Ui::CustomSurvey *ui;

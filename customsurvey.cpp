@@ -1,17 +1,21 @@
 #include "customsurvey.h"
+
 #include "ui_customsurvey.h"
 #include <QFileDialog>
 #include <questiondata.h>
 #include <fstream>
+#include <dbwindow.h>
 
 using namespace std;
 
-CustomSurvey::CustomSurvey(QWidget *parent) :
+CustomSurvey::CustomSurvey(QWidget *parent, DbManager *db_manager) :
     QWidget(parent),
-    ui(new Ui::CustomSurvey)
+    ui(new Ui::CustomSurvey), db_man(db_manager)
 {
     ui->setupUi(this);
-    db_man= new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
+
+
+
     BuildCombo();
     ui->ShowWindow->setReadOnly(true);
 
@@ -24,7 +28,7 @@ CustomSurvey::~CustomSurvey()
 
 void CustomSurvey::on_DirectoryButton_clicked(){
 
-    QUrl StartDir("/Users/Sebastian");
+    QUrl StartDir("/Users/Sebastian/Documents");
 
     file = QFileDialog::getOpenFileUrl(this, tr("here we go"), StartDir,tr("CSV Files (*.csv)") );
 
@@ -118,3 +122,6 @@ void CustomSurvey::DisplayStatistics(){
     ui->ShowWindow->moveCursor(QTextCursor::Start);
 }
 
+void CustomSurvey::on_ToDbButton_clicked(){
+    f_man->WriteSurveyToDb();
+}
