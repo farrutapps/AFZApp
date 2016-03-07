@@ -14,23 +14,23 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    customsurvey.cpp \
-    flexiblesurvey.cpp \
-    questiondata.cpp \
-    dbmanager.cpp \
-    filemanager.cpp \
-    dbwindow.cpp
+    classes/dbmanager.cpp \
+    classes/filemanager.cpp \
+    classes/questiondata.cpp \
+    windows/customsurvey.cpp \
+    windows/dbwindow.cpp \
+    windows/flexiblesurvey.cpp \
+    windows/mainwindow.cpp
 
-HEADERS  += mainwindow.h \
-    customsurvey.h \
-    flexiblesurvey.h \
-    questiondata.h \
-    dbmanager.h \
-    filemanager.h \
-    dbwindow.h
+HEADERS  += classes/dbmanager.h \
+    classes/filemanager.h \
+    classes/questiondata.h \
+    windows/customsurvey.h \
+    windows/dbwindow.h \
+    windows/flexiblesurvey.h \
+    windows/mainwindow.h
 
-FORMS    += mainwindow.ui \
-    customsurvey.ui \
-    flexiblesurvey.ui \
-    dbwindow.ui
+FORMS    += windows/mainwindow.ui \
+    windows/customsurvey.ui \
+   windows/flexiblesurvey.ui \
+    windows/dbwindow.ui

@@ -2,9 +2,10 @@
 
 #include "ui_customsurvey.h"
 #include <QFileDialog>
-#include <questiondata.h>
+#include <QInputDialog>
+#include <classes/questiondata.h>
 #include <fstream>
-#include <dbwindow.h>
+#include <windows/dbwindow.h>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ CustomSurvey::~CustomSurvey()
 }
 
 void CustomSurvey::on_DirectoryButton_clicked(){
+  //  on_ClearButton_clicked();
 
     QUrl StartDir("/Users/Sebastian/Documents");
 
@@ -56,13 +58,14 @@ void CustomSurvey::on_ClearButton_clicked(){
     ui->ShowWindow->clear();
     ui->DirectoryTextBox->clear();
     delete f_man;
+    questions.clear();
 }
 
 void CustomSurvey::BuildCombo(){
 
     vector <QString> Surveytypes;
 
-    db_man->select_single_query("SELECT name FROM surveytypes", "name", Surveytypes);
+    db_man->select_single_query("SELECT surveytype_name FROM surveytypes", "surveytype_name", Surveytypes);
 
     for(int i =0; i<Surveytypes.size();++i){
     ui->SurveyTypeBox->addItem(Surveytypes[i]);
@@ -123,5 +126,12 @@ void CustomSurvey::DisplayStatistics(){
 }
 
 void CustomSurvey::on_ToDbButton_clicked(){
-    f_man->WriteSurveyToDb();
+ //
+
+    QInputDialog *dialog = new QInputDialog(this);
+    dialog->setOkButtonText("Speichern");
+    dialog->setCancelButtonText("Abbrechen");
+    QString Ort = QInputDialog::getText(this, "Seminarort", "Bitte den Ort des Seminares eingeben!");
+
+    f_man->WriteSurveyToDb(Ort);
 }

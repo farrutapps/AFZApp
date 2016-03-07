@@ -1,15 +1,16 @@
-#include "mainwindow.h"
+#include "windows/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "flexiblesurvey.h"
-#include "customsurvey.h"
-#include "dbwindow.h"
+#include "windows/flexiblesurvey.h"
+#include "windows/customsurvey.h"
+#include "windows/dbwindow.h"
 
 #include <iostream>
 #include <fstream>
 #include <cassert>
 #include <vector>
 
-#include <dbmanager.h>
+#include <classes/dbmanager.h>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

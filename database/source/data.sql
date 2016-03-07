@@ -10,11 +10,8 @@
 DROP TABLE IF EXISTS data;
 
 CREATE TABLE data(
-id INTEGER PRIMARY KEY,
-subq_id INT,
-answer INT,
-
-
-FOREIGN KEY (subq_id) REFERENCES subquestions(id)
+data_id INTEGER PRIMARY KEY,
+subquestion_id INT REFERENCES subquestions ON UPDATE CASCADE ON DELETE CASCADE,
+answer INT
 
 );

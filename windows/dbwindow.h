@@ -2,7 +2,8 @@
 #define DBWINDOW_H
 
 #include <QWidget>
-#include <dbmanager.h>
+#include <QMessageBox>
+#include "classes/dbmanager.h"
 
 namespace Ui {
 class DbWindow;
@@ -17,9 +18,13 @@ public:
     ~DbWindow();
 
     void SetupTable();
-    void ReadDb();
+    void SetupCombo();
+    void DeleteSurvey(QString survey_id);
 
 
+public slots:
+    void on_ActionButton_clicked();
+    void ReadDatabase();
 private:
     Ui::DbWindow *ui;
     DbManager *db_man;

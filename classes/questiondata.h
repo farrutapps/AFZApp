@@ -3,8 +3,10 @@
 
 #include <QWidget>
 #include <vector>
-using namespace std;
+
 #include <iostream>
+
+using namespace std;
 
 class questiondata
 {

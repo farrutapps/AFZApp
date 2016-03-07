@@ -1,4 +1,4 @@
-#include "flexiblesurvey.h"
+#include "windows/flexiblesurvey.h"
 #include "ui_flexiblesurvey.h"
 
 flexiblesurvey::flexiblesurvey(QWidget *parent) :

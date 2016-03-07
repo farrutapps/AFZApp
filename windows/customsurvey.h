@@ -6,9 +6,10 @@ using namespace std;
 #include <QUrl>
 #include <fstream>
 #include <cassert>
-#include <questiondata.h>
-#include "filemanager.h"
-# include "dbmanager.h"
+
+#include "classes/questiondata.h"
+#include "classes/filemanager.h"
+# include "classes/dbmanager.h"
 
 namespace Ui {
 class CustomSurvey;

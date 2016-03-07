@@ -1,5 +1,6 @@
 #ifndef FLEXIBLESURVEY_H
 #define FLEXIBLESURVEY_H
+
 using namespace std;
 #include <iostream>
 #include <QWidget>

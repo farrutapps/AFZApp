@@ -7,6 +7,9 @@
 -- 
 -- using foreign keys
 
+-- SETTINGS
+PRAGMA foreign_keys = ON;
+
 -- CREATE TABLES
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveytypes.SQL
 .read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/qtypes.SQL

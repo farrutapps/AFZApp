@@ -2,7 +2,7 @@
 #define DBMANAGER_H
 
 #include <iostream>
-#include <QObject>
+#include <QWidget>
 #include <QVariant>
 #include <QSqlError>
 #include <QSqlRecord>
@@ -11,25 +11,30 @@
 
 using namespace std;
 
-class DbManager
+class DbManager : public QWidget
 {
-public:
-    DbManager(const QString& path);
-    DbManager();
+    Q_OBJECT
 
- //   void setpath(QString path);
+public:
+    explicit DbManager(const QString& path, QWidget *parent = 0);
+
+
     bool select_query(QString sql_query, vector <QString> &column_names, vector < vector <QString> > &output);
     bool select_single_query(QString sql_query, QString column_name, vector < QString > &output);
     bool count_lines(QString table, int &result);
     bool insert_query(QString sql_query);
+    bool delete_query(QString sql_query);
+    bool enable_foreign_keys();
 
 
 private:
     QSqlDatabase m_db;
 
 signals:
+    void database_changed();
 
 public slots:
+
 };
 
 #endif // DBMANAGER_H

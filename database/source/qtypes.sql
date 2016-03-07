@@ -10,9 +10,7 @@
 DROP TABLE IF EXISTS qtypes;
 
 CREATE TABLE qtypes(
-id INTEGER PRIMARY KEY,
-surveytype_id INT,
-qtype INT,
-
-FOREIGN KEY (surveytype_id) REFERENCES surveytypes(id)
+qtype_id INTEGER PRIMARY KEY,
+surveytype_id INT REFERENCES surveytypes ON UPDATE CASCADE ON DELETE CASCADE,
+qtype INT
 );

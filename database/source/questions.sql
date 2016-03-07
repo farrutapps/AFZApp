@@ -10,10 +10,10 @@
 DROP TABLE IF EXISTS questions;
 
 CREATE TABLE questions (
-id INTEGER PRIMARY KEY,
-survey_id INT,
-question VARCHAR(256),
-type INT,
+question_id INTEGER PRIMARY KEY,
+survey_id INT REFERENCES surveys ON UPDATE CASCADE ON DELETE CASCADE,
+question_name VARCHAR(256),
+question_type INT,
 
-FOREIGN KEY (survey_id) REFERENCES surveys(id)
+FOREIGN KEY (survey_id) REFERENCES surveys(survey_id)
 );

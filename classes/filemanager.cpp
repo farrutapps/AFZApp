@@ -1,6 +1,6 @@
-#include "filemanager.h"
-#include "questiondata.h"
-#include "dbmanager.h"
+#include "classes/filemanager.h"
+#include "classes/questiondata.h"
+#include "classes/dbmanager.h"
 
 
 /**
@@ -16,11 +16,14 @@ FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : 
 {
 
 ReadSurveytypes();
-ReadCsv();
-ReadDataToQuestions();
+
+if(ReadCsv())
+    ReadDataToQuestions();
+
 }
 
-void FileManager::ReadCsv(){
+bool FileManager::ReadCsv(){
+    bool success = false;
 
     cout << "START READING CSV" << endl;
 
@@ -28,9 +31,11 @@ void FileManager::ReadCsv(){
     file.open(file_path.toStdString().c_str());
 
     if(!file.is_open()){
-        cout << "file could not be opened! error"<< endl;
-        assert(0);
-   }
+        cout << "WARNING: file has not been opened!"<< endl;
+        success = false;
+    }
+
+    else {success = true;}
 
     string value;
 
@@ -59,34 +64,29 @@ void FileManager::ReadCsv(){
         else dataset.push_back(value);
     }
 
-    if (datamatrix.empty()){
-        cout << "ERROR. READING CSV FAILED. STOP." << endl << "Check .csv dialect. "
+    if (success==true && datamatrix.empty()){
+        cout << "ERROR. READING CSV FAILED. " << endl << "Check .csv dialect. "
                                                               "line breakers could be different.  maybe: \r\n " << endl;
-        assert(0);
+    success = false;
     }
 
+
+    return success;
 }
 
 void FileManager::ReadDataToQuestions(){
 
     cout << "START READING DATA TO QUESTION OBJECTS" << endl;
-// fills CSV Data from vector < vector <T> > datamatrix to questiondata objects.
+// fills CSV Data from vector < vector <...> > datamatrix to questiondata objects.
 
     int m = datamatrix[0].size();
 
- //   questions.resize(m);
- //   QString result;
+
     int id=0;
 
     for(int i=0; i<m;++i){
 
-        /*
-        if(question_types[surveytype_id][i].toInt()!=0){
-            questions[i].write_questiontype(question_types[surveytype_id][i].toInt());
-            questions[i].write_question(QString::fromStdString(datamatrix[0][i]));
-            questions[i].write_subquestion(QString::fromStdString(datamatrix[1][i]));
-            questions[i].write_data_fromStdString(datamatrix,i);
-            */
+
         if(question_types[surveytype_id][i].toInt()!=0){
 
             questiondata *temp_question = new questiondata;
@@ -110,7 +110,7 @@ void FileManager::ReadDataToQuestions(){
 }
 
 void FileManager::ReadSurveytypes(){
-    cout << "START READING SURVEYTYOES FROM DB" << endl;
+    cout << "START READING SURVEYTYPES FROM DB" << endl;
 
     int surveytypes_size =0;
     db_man->count_lines("surveytypes",surveytypes_size);
@@ -123,11 +123,11 @@ void FileManager::ReadSurveytypes(){
 
 }
 
-void FileManager::WriteSurveyToDb(){
+void FileManager::WriteSurveyToDb(QString Location){
     cout << "START WRITING SURVEY TO DATABASE!" << endl;
 
     // INSERT SURVEY
-    db_man->insert_query("INSERT INTO surveys VALUES (NULL," + QString::number(surveytype_id) + ",'Ort', '02/24/2015' )");
+    db_man->insert_query("INSERT INTO surveys VALUES (NULL," + QString::number(surveytype_id) + ",'" + Location +"', '02/24/2015', "+ QString::number(questions[0].read_data().size()) +")");
 
     vector <QString> temp_survey_id;
     db_man->select_single_query("SELECT last_insert_rowid() FROM surveys", "last_insert_rowid()",temp_survey_id);

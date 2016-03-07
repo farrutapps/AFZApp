@@ -1,13 +1,13 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include "questiondata.h"
-
+#include "classes/questiondata.h"
+#include "classes/dbmanager.h"
 
 #include <QWidget>
 #include <iostream>
 #include <vector>
-#include "dbmanager.h"
+
 
 #include <fstream>
 #include <cassert>
@@ -23,11 +23,11 @@ public:
     FileManager();
     FileManager(QString path, int surveytype_id, DbManager *database_man);
 
-    void ReadCsv();
+    bool ReadCsv();
     void ReadDataToQuestions();
     void ReadSurveytypes();
 
-    void WriteSurveyToDb();
+    void WriteSurveyToDb(QString );
 
     void saveToTextFile(QString, QString );
 

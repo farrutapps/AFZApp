@@ -10,7 +10,7 @@
 DROP TABLE IF EXISTS surveytypes;
 
 CREATE TABLE surveytypes(
-id INTEGER PRIMARY KEY,
-name VARCHAR(50)
+surveytype_id INTEGER PRIMARY KEY,
+surveytype_name VARCHAR(50)
 
 );

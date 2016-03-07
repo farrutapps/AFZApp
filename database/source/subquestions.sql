@@ -10,9 +10,7 @@
 DROP TABLE IF EXISTS subquestions;
 
 CREATE TABLE subquestions (
-id INTEGER PRIMARY KEY,
-question_id INT,
-subquestion VARCHAR(256),
-
-FOREIGN KEY (question_id) REFERENCES questions(id)
+subquestion_id INTEGER PRIMARY KEY,
+question_id INT REFERENCES questions,
+subquestion_name VARCHAR(256)
 );

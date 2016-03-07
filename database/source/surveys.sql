@@ -10,13 +10,12 @@
 DROP TABLE IF EXISTS surveys;
 
 CREATE TABLE surveys(
-id INTEGER PRIMARY KEY, 
-surveytype_id INT, 
-name VARCHAR(30),
+survey_id INTEGER PRIMARY KEY, 
+surveytype_id INT REFERENCES surveytypes, 
+survey_name VARCHAR(30),
 
-survey_date DATE, 
-
-FOREIGN KEY (surveytype_id) REFERENCES surveytypes(id)
+survey_date DATE,
+survey_datasize INT
 
 );
 
