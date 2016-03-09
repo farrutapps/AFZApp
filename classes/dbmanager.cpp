@@ -2,8 +2,12 @@
 
 DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
 {
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(path);
+    m_db = QSqlDatabase::addDatabase("QPSQL");
+        m_db.setHostName("localhost");
+        m_db.setDatabaseName("postgres");
+        m_db.setUserName("postgres");
+        m_db.setPassword("database");
+        m_db.setPort(5432);
 
     if (!m_db.open()){
         cout << "Error: connection with database failed" << endl;
@@ -12,26 +16,9 @@ DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
         cout << "database connection ok!" << endl;
     }
 
-    enable_foreign_keys();
+
 }
 
-bool DbManager::enable_foreign_keys(){
-    bool success = false;
-    QSqlQuery query;
-
-    query.prepare("PRAGMA foreign_keys = ON");
-
-    success = query.exec();
-    cout << query.executedQuery().toStdString() << endl;
-
-    if (!success){
-        cout << "enabling foreign keys failed. error: " << query.lastError().text().toStdString() << endl;
-    }
-
-
-
-    return success;
-}
 
 bool DbManager::select_query(QString sql_query,vector <QString> &column_names,vector < vector <QString> > &output){
     // can output one column
@@ -105,12 +92,31 @@ bool DbManager::insert_query(QString sql_query){
     emit database_changed();
     return success;
 }
+bool DbManager::insert_query(QString sql_query, QString id_name, int &id_of_insert){
+    bool success=false;
+    QSqlQuery query;
+
+    query.prepare(sql_query);
+
+    success = query.exec();
+    cout << query.executedQuery().toStdString() << endl;
+
+    if (!success)
+        cout << "insert query error:" << query.lastError().text().toStdString()<< endl;
+
+    while (query.next()){
+        id_of_insert=query.value(id_name).toInt();
+    }
+
+    emit database_changed();
+    return success;
+}
 
 bool DbManager::count_lines(QString table, int &result){
     bool success = false;
     QSqlQuery query;
 
-    query.prepare("SELECT COUNT(rowid) FROM " + table);
+    query.prepare("SELECT COUNT(*) FROM " + table);
 
     success = query.exec();
 
@@ -118,7 +124,7 @@ bool DbManager::count_lines(QString table, int &result){
         cout << "count_query error: " << query.lastError().text().toStdString() << endl;
     }
 
-    int  id_column=query.record().indexOf("COUNT(rowid)");
+    int  id_column=query.record().indexOf("count");
 
 
     while (query.next()){
@@ -142,6 +148,6 @@ bool DbManager::delete_query(QString sql_query){
     }
 
 
-
+    emit database_changed();
     return success;
 }

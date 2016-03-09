@@ -19,7 +19,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Datenbank auswählen:</string>
+        <string>Umfrage zur Datenbank hinzufügen:</string>
        </property>
       </widget>
      </item>
@@ -34,7 +34,7 @@
       <widget class="QComboBox" name="ActionCombo"/>
      </item>
      <item row="1" column="0">
-      <widget class="QPlainTextEdit" name="plainTextEdit">
+      <widget class="QPlainTextEdit" name="NewSurveyPath">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="FindPathButton">
        <property name="text">
         <string>Durchsuchen</string>
        </property>
@@ -53,7 +53,7 @@
      <item row="2" column="0" colspan="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>In ausgewählter Datenbank gespeicherte Umfragen:</string>
+        <string>In Datenbank gespeicherte Umfragen:</string>
        </property>
       </widget>
      </item>

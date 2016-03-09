@@ -38,6 +38,8 @@ Tabs->addTab(DbWindowTab, "Database Management");
 
 this->setCentralWidget(CentralWidget);
 
+
+
 }
 
 MainWindow::~MainWindow()

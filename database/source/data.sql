@@ -7,11 +7,11 @@
 -- 
 -- using foreign keys
 
-DROP TABLE IF EXISTS data;
+DROP TABLE IF EXISTS data CASCADE;
 
 CREATE TABLE data(
-data_id INTEGER PRIMARY KEY,
-subquestion_id INT REFERENCES subquestions ON UPDATE CASCADE ON DELETE CASCADE,
-answer INT
+data_id SERIAL PRIMARY KEY,
+subquestion_id INTEGER REFERENCES subquestions ON UPDATE CASCADE ON DELETE CASCADE,
+answer INTEGER
 
 );

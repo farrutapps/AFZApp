@@ -1,7 +1,7 @@
 #include "classes/filemanager.h"
 #include "classes/questiondata.h"
 #include "classes/dbmanager.h"
-
+#include "windows/dbwindow.h"
 
 /**
  * TODO:
@@ -19,6 +19,8 @@ ReadSurveytypes();
 
 if(ReadCsv())
     ReadDataToQuestions();
+
+
 
 }
 
@@ -127,14 +129,13 @@ void FileManager::WriteSurveyToDb(QString Location){
     cout << "START WRITING SURVEY TO DATABASE!" << endl;
 
     // INSERT SURVEY
-    db_man->insert_query("INSERT INTO surveys VALUES (NULL," + QString::number(surveytype_id) + ",'" + Location +"', '02/24/2015', "+ QString::number(questions[0].read_data().size()) +")");
-
-    vector <QString> temp_survey_id;
-    db_man->select_single_query("SELECT last_insert_rowid() FROM surveys", "last_insert_rowid()",temp_survey_id);
-
-    vector <QString> temp_mainquestion_id;
-    vector <QString> temp_subquestion_id;
+    int survey_id=0;
+    int question_id=0;
+    int subquestion_id=0;
     vector <int> temp_data;
+
+    db_man->insert_query("INSERT INTO surveys(surveytype_id, survey_name, survey_date, survey_datasize) VALUES (" + QString::number(surveytype_id) + ",'" +
+                         Location +"', '02/24/2015', "+ QString::number(questions[0].read_data().size()) + ") RETURNING survey_id","survey_id",survey_id);
 
 
     // INSERT QUESTIONS WITH SUBQUESTIONS
@@ -142,24 +143,19 @@ void FileManager::WriteSurveyToDb(QString Location){
 
         if (questions[i].read_question() != ""){
 
-            db_man->insert_query("INSERT INTO questions VALUES(NULL, "+ temp_survey_id[0] +", '"+ questions[i].read_question()+"'," + QString::number(questions[i].read_question_type()) + ")");
-
-            temp_mainquestion_id.clear();
-            db_man->select_single_query("SELECT last_insert_rowid() FROM questions", "last_insert_rowid()",temp_mainquestion_id);
+            db_man->insert_query("INSERT INTO questions(survey_id, question_name, question_type) VALUES(" + QString::number(survey_id) +", '"+ questions[i].read_question()+"'," + QString::number(questions[i].read_question_type()) + ") RETURNING question_id", "question_id", question_id);
         }
 
-
-        db_man->insert_query("INSERT INTO subquestions VALUES (NULL, " + temp_mainquestion_id[0] +", '"+ questions[i].read_subquestion()+"')"); //
+        db_man->insert_query("INSERT INTO subquestions(question_id, subquestion_name) VALUES (" + QString::number(question_id) +", '"+ questions[i].read_subquestion()+"') RETURNING subquestion_id","subquestion_id",subquestion_id); //
 
          // NOW INSERT DATA CONNECTED TO SUBQUESTIONS
-        temp_subquestion_id.clear();
-        db_man->select_single_query("SELECT last_insert_rowid() FROM subquestions", "last_insert_rowid()",temp_subquestion_id);
+
 
         temp_data.clear();
         temp_data=questions[i].read_data();
         for (int j=0; j<temp_data.size(); ++j){
 
-            db_man->insert_query("INSERT INTO data VALUES(NULL, " + temp_subquestion_id[0] + ", " + QString::number(temp_data[j]) +")");
+            db_man->insert_query("INSERT INTO data(subquestion_id, answer) VALUES(" + QString::number(subquestion_id) + ", " + QString::number(temp_data[j]) +")");
         }
 
     }

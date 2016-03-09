@@ -102,7 +102,7 @@ void DbWindow::on_ActionButton_clicked(){
 void DbWindow::DeleteSurvey(QString survey_id){
 
     db_man->delete_query("DELETE FROM surveys WHERE survey_id="+ survey_id);
-
+/*
     vector <QString> q_ids;
     vector <QString> sq_ids;
     vector <QString> d_ids;
@@ -122,5 +122,22 @@ void DbWindow::DeleteSurvey(QString survey_id){
     }
     db_man->blockSignals(false);
     ReadDatabase();
+    */
 }
 
+void DbWindow::on_FindPathButton_clicked(){
+
+
+    QUrl StartDir("~/Documents");
+
+    file = QFileDialog::getOpenFileUrl(this, tr("here we go"), StartDir,tr("CSV Files (*.csv)") );
+
+    ui->DirectoryTextBox->appendPlainText(file.path());
+
+    cout << "INITIATE FILEMANAGER" << endl;
+
+    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex(),db_man);
+
+     questions = f_man->get_questions();
+
+}

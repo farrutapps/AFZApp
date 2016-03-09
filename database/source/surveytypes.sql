@@ -7,10 +7,10 @@
 -- 
 -- using foreign keys
 
-DROP TABLE IF EXISTS surveytypes;
+DROP TABLE IF EXISTS surveytypes CASCADE;
 
 CREATE TABLE surveytypes(
-surveytype_id INTEGER PRIMARY KEY,
+surveytype_id SERIAL PRIMARY KEY,
 surveytype_name VARCHAR(50)
 
 );

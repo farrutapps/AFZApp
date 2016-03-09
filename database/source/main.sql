@@ -8,16 +8,16 @@
 -- using foreign keys
 
 -- SETTINGS
-PRAGMA foreign_keys = ON;
+
 
 -- CREATE TABLES
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveytypes.SQL
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/qtypes.SQL
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveys.SQL
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveytypes.SQL
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/qtypes.SQL
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/surveys.SQL
 --.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/questiontypes.SQL
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/questions.SQL
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/subquestions.SQL
-.read /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/data.sql
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/questions.SQL
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/subquestions.SQL
+\i /Users/Sebastian/documents/cpp/AFZ/Feedbacker/database/source/data.sql
 
 -- FILL TABLE
-.read /Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL
+\i /Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/source/setup.SQL

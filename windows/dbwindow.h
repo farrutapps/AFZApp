@@ -25,6 +25,8 @@ public:
 public slots:
     void on_ActionButton_clicked();
     void ReadDatabase();
+    void on_FindPathButton_clicked();
+
 private:
     Ui::DbWindow *ui;
     DbManager *db_man;

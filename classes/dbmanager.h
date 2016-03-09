@@ -23,8 +23,9 @@ public:
     bool select_single_query(QString sql_query, QString column_name, vector < QString > &output);
     bool count_lines(QString table, int &result);
     bool insert_query(QString sql_query);
+    bool insert_query(QString sql_query, QString id_name, int &id_of_insert);
     bool delete_query(QString sql_query);
-    bool enable_foreign_keys();
+
 
 
 private:

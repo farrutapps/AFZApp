@@ -7,10 +7,10 @@
 -- 
 -- using foreign keys
 
-DROP TABLE IF EXISTS qtypes;
+DROP TABLE IF EXISTS qtypes CASCADE;
 
 CREATE TABLE qtypes(
-qtype_id INTEGER PRIMARY KEY,
-surveytype_id INT REFERENCES surveytypes ON UPDATE CASCADE ON DELETE CASCADE,
-qtype INT
+qtype_id SERIAL PRIMARY KEY,
+surveytype_id INTEGER REFERENCES surveytypes ON UPDATE CASCADE ON DELETE CASCADE,
+qtype INTEGER
 );

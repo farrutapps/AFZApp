@@ -7,10 +7,10 @@
 -- 
 -- using foreign keys
 
-DROP TABLE IF EXISTS subquestions;
+DROP TABLE IF EXISTS subquestions CASCADE;
 
 CREATE TABLE subquestions (
-subquestion_id INTEGER PRIMARY KEY,
-question_id INT REFERENCES questions,
+subquestion_id SERIAL PRIMARY KEY,
+question_id INTEGER REFERENCES questions ON UPDATE CASCADE ON DELETE CASCADE,
 subquestion_name VARCHAR(256)
 );
