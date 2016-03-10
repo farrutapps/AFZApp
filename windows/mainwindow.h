@@ -4,6 +4,7 @@
 using namespace std;
 #include <iostream>
 #include <QMainWindow>
+#include "windows/calcwindow.h"
 
 
 namespace Ui {
@@ -19,8 +20,11 @@ public:
     ~MainWindow();
 
 
+
+
 private:
     Ui::MainWindow *ui;
+
 
 
 };

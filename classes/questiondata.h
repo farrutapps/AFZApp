@@ -15,10 +15,11 @@ public:
     questiondata(QString, vector < vector <double > >&, int, int);
 
     void write_question(QString );
+    void write_subquestion(QString);
     void write_questiontype(int);
     void write_data(vector <vector <double> >  &, int );
     void write_data_fromStdString(vector <vector <string> >  &, int );
-    void write_subquestion(QString);
+
     void push_back_datamatrix(vector <int>);
     void write_ID(int id);
 

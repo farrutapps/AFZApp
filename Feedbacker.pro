@@ -17,20 +17,23 @@ SOURCES += main.cpp\
     classes/dbmanager.cpp \
     classes/filemanager.cpp \
     classes/questiondata.cpp \
-    windows/customsurvey.cpp \
     windows/dbwindow.cpp \
     windows/flexiblesurvey.cpp \
-    windows/mainwindow.cpp
+    windows/mainwindow.cpp \
+    windows/calcwindow.cpp \
+    windows/datainputpopup.cpp
 
 HEADERS  += classes/dbmanager.h \
     classes/filemanager.h \
     classes/questiondata.h \
-    windows/customsurvey.h \
     windows/dbwindow.h \
     windows/flexiblesurvey.h \
-    windows/mainwindow.h
+    windows/mainwindow.h \
+    windows/calcwindow.h \
+    windows/datainputpopup.h
 
 FORMS    += windows/mainwindow.ui \
-    windows/customsurvey.ui \
    windows/flexiblesurvey.ui \
-    windows/dbwindow.ui
+    windows/dbwindow.ui \
+    windows/calcwindow.ui \
+    windows/datainputpopup.ui

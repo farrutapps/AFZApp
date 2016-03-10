@@ -23,13 +23,14 @@ public:
     FileManager();
     FileManager(QString path, int surveytype_id, DbManager *database_man);
 
-    bool ReadCsv();
-    void ReadDataToQuestions();
+    bool CsvToDatamatrix();
+    void DatamatrixToQuestions();
     void ReadSurveytypes();
 
-    void WriteSurveyToDb(QString );
+    void QuestionsToDb(QString Location , QString Date);
 
-    void saveToTextFile(QString, QString );
+    void QuestionsToTextFile(QString filepath, QString text);
+    void DbToQuestions(int survey_id);
 
     vector <questiondata> get_questions();
 

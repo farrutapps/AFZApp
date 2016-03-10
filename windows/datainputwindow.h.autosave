@@ -1,0 +1,26 @@
+#ifndef DATAINPUTWINDOW_H
+#define DATAINPUTWINDOW_H
+
+#include <QWidget>
+
+namespace Ui {
+class DataInputWindow;
+}
+
+class DataInputWindow : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DataInputWindow(QWidget *parent = 0);
+    ~DataInputWindow();
+    
+    QString GetDate();
+    int GetSurveyType();
+    
+
+private:
+    Ui::DataInputWindow *ui;
+};
+
+#endif // DATAINPUTWINDOW_H

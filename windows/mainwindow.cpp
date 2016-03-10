@@ -1,7 +1,7 @@
 #include "windows/mainwindow.h"
 #include "ui_mainwindow.h"
 #include "windows/flexiblesurvey.h"
-#include "windows/customsurvey.h"
+
 #include "windows/dbwindow.h"
 
 #include <iostream>
@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
+
+
 QWidget *CentralWidget = new QWidget(this);
 this->resize(900,600);
 
@@ -25,14 +27,14 @@ QGridLayout *mainLayout = new QGridLayout(CentralWidget);
 mainLayout->addWidget(Tabs);
 
 //connect to database
-DbManager* db_man= new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
+DbManager *db_man= new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 
-QWidget *CustomTab = new CustomSurvey(this,db_man);
-QWidget *DbWindowTab= new DbWindow(this,db_man);
+
+QWidget *NewDbWindow= new DbWindow(this,db_man);
 //QWidget *FlexibleTab = new flexiblesurvey();
 
-Tabs->addTab(CustomTab, "Customized");
-Tabs->addTab(DbWindowTab, "Database Management");
+
+Tabs->addTab(NewDbWindow, "Database Management");
 //Tabs->addTab(FlexibleTab, "Flexibel");
 
 
@@ -46,3 +48,4 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+

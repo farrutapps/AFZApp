@@ -1,0 +1,19 @@
+#include "datainputwindow.h"
+#include "ui_datainputwindow.h"
+
+DataInputWindow::DataInputWindow(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::DataInputWindow)
+{
+    ui->setupUi(this);
+    
+    QFont font;
+    font.setBold(true);
+    font.setPointSize(12);
+    ui->HeaderLabel->setFont(font);
+}
+
+DataInputWindow::~DataInputWindow()
+{
+    delete ui;
+}

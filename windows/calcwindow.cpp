@@ -1,6 +1,6 @@
-#include "customsurvey.h"
+#include "calcwindow.h"
 
-#include "ui_customsurvey.h"
+#include "ui_CalcWindow.h"
 #include <QFileDialog>
 #include <QInputDialog>
 #include <classes/questiondata.h>
@@ -9,71 +9,28 @@
 
 using namespace std;
 
-CustomSurvey::CustomSurvey(QWidget *parent, DbManager *db_manager) :
+CalcWindow::CalcWindow(QWidget *parent, DbManager *db_manager, FileManager *file_manager) :
     QWidget(parent),
-    ui(new Ui::CustomSurvey), db_man(db_manager)
+    ui(new Ui::CalcWindow),
+    db_man(db_manager),
+    f_man(file_manager)
 {
     ui->setupUi(this);
 
 
-
-    BuildCombo();
     ui->ShowWindow->setReadOnly(true);
-
-}
-
-CustomSurvey::~CustomSurvey()
-{
-    delete ui;
-}
-
-void CustomSurvey::on_DirectoryButton_clicked(){
-  //  on_ClearButton_clicked();
-
-    QUrl StartDir("/Users/Sebastian/Documents");
-
-    file = QFileDialog::getOpenFileUrl(this, tr("here we go"), StartDir,tr("CSV Files (*.csv)") );
-
-    ui->DirectoryTextBox->appendPlainText(file.path());
-
-    cout << "INITIATE FILEMANAGER" << endl;
-
-    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex(),db_man);
-
-     questions = f_man->get_questions();
-
-}
-
-void CustomSurvey::on_GoButton_clicked(){
-
-    cout << "START DISPLAYING STATISTICS " << endl;
-
+    questions=f_man->get_questions();
     DisplayStatistics();
 
 }
 
-void CustomSurvey::on_ClearButton_clicked(){
-
-    ui->ShowWindow->moveCursor(QTextCursor::End);
-    ui->ShowWindow->clear();
-    ui->DirectoryTextBox->clear();
-    delete f_man;
-    questions.clear();
+CalcWindow::~CalcWindow()
+{
+    delete ui;
 }
 
-void CustomSurvey::BuildCombo(){
 
-    vector <QString> Surveytypes;
-
-    db_man->select_single_query("SELECT surveytype_name FROM surveytypes", "surveytype_name", Surveytypes);
-
-    for(int i =0; i<Surveytypes.size();++i){
-    ui->SurveyTypeBox->addItem(Surveytypes[i]);
-    }
-
-}
-
-void CustomSurvey::on_WriteFile_Button_clicked(){
+void CalcWindow::on_WriteFile_Button_clicked(){
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::Directory);
@@ -91,11 +48,11 @@ void CustomSurvey::on_WriteFile_Button_clicked(){
     QString filepath=directory[0].path();
     filepath=filepath+"/"+filename;
 
-    f_man->saveToTextFile(filepath,text);
+    f_man->QuestionsToTextFile(filepath,text);
 
 }
 
-void CustomSurvey::DisplayStatistics(){
+void CalcWindow::DisplayStatistics(){
 
     QString introduction = "<i>Falls nicht anders angegeben, wurden die Mittelwerte der Antworten ermittelt. Möchgliche Antworten waren: 1,2,3,4. Für die Wanderausstellungen giltet: 1 bedeutet volle Zusstimmung, 4 gar keine Zustimmung <\i>" ;
     ui->ShowWindow->append(introduction);
@@ -125,13 +82,3 @@ void CustomSurvey::DisplayStatistics(){
     ui->ShowWindow->moveCursor(QTextCursor::Start);
 }
 
-void CustomSurvey::on_ToDbButton_clicked(){
- //
-
-    QInputDialog *dialog = new QInputDialog(this);
-    dialog->setOkButtonText("Speichern");
-    dialog->setCancelButtonText("Abbrechen");
-    QString Ort = QInputDialog::getText(this, "Seminarort", "Bitte den Ort des Seminares eingeben!");
-
-    f_man->WriteSurveyToDb(Ort);
-}

@@ -3,7 +3,12 @@
 
 #include <QWidget>
 #include <QMessageBox>
+#include <QUrl>
 #include "classes/dbmanager.h"
+#include "classes/questiondata.h"
+#include "classes/filemanager.h"
+#include "windows/calcwindow.h"
+#include "windows/datainputpopup.h"
 
 namespace Ui {
 class DbWindow;
@@ -21,15 +26,24 @@ public:
     void SetupCombo();
     void DeleteSurvey(QString survey_id);
 
+signals:
+
 
 public slots:
     void on_ActionButton_clicked();
     void ReadDatabase();
     void on_FindPathButton_clicked();
+    void SaveToDatabase();
 
 private:
     Ui::DbWindow *ui;
     DbManager *db_man;
+    FileManager *f_man;
+    DataInputPopup *NewPopup;
+    QUrl file;
+    CalcWindow * NewCalcWindow;
+//    FileManager *f_man;
+//    vector <questiondata> questions;
 
 };
 

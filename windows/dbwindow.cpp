@@ -1,5 +1,9 @@
 #include "windows/dbwindow.h"
+#include "windows/datainputpopup.h"
+
 #include "ui_dbwindow.h"
+#include "classes/filemanager.h"
+#include "QFileDialog"
 
 DbWindow::DbWindow(QWidget *parent, DbManager *db_manager) :
     QWidget(parent),
@@ -11,6 +15,7 @@ DbWindow::DbWindow(QWidget *parent, DbManager *db_manager) :
     ReadDatabase();
 
     connect (db_man,SIGNAL(database_changed()),this,SLOT(ReadDatabase()));
+
 }
 
 DbWindow::~DbWindow()
@@ -75,6 +80,7 @@ void DbWindow::ReadDatabase(){
 }
     
 void DbWindow::SetupCombo(){
+    ui->ActionCombo->addItem("Umfrage Auswerten");
     ui->ActionCombo->addItem("Ausgewählten Eintrag löschen");
 }
 
@@ -83,17 +89,27 @@ void DbWindow::on_ActionButton_clicked(){
     QString survey_id = ui->DbTable->selectedItems().at(4)->text();
 
     switch(ui->ActionCombo->currentIndex()){
-        case 0:
-        QMessageBox msgBox;
-        msgBox.setText("Ausgewählten Eintrag wirklich löschen?");
-        msgBox.setInformativeText("Daten werden aus der Datenbank entfernt.");
-        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        int ret = msgBox.exec();
 
-        if (ret == QMessageBox::Cancel){return;}
-        if (ret == QMessageBox::Ok){DeleteSurvey(survey_id);}
+        case 0:
+            // FUNCTION: READ DATA FROM DB TO QUESTIONS
+            NewCalcWindow = new CalcWindow(0, db_man,f_man);
+            NewCalcWindow->show();
+
         break;
+
+
+
+        case 1:
+            QMessageBox msgBox;
+            msgBox.setText("Ausgewählten Eintrag wirklich löschen?");
+            msgBox.setInformativeText("Daten werden aus der Datenbank entfernt.");
+            msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+            msgBox.setDefaultButton(QMessageBox::Ok);
+            int ret = msgBox.exec();
+
+            if (ret == QMessageBox::Cancel){return;}
+            if (ret == QMessageBox::Ok){DeleteSurvey(survey_id);}
+            break;
     }
 
 
@@ -102,27 +118,7 @@ void DbWindow::on_ActionButton_clicked(){
 void DbWindow::DeleteSurvey(QString survey_id){
 
     db_man->delete_query("DELETE FROM surveys WHERE survey_id="+ survey_id);
-/*
-    vector <QString> q_ids;
-    vector <QString> sq_ids;
-    vector <QString> d_ids;
 
-    db_man->blockSignals(true);
-
-    db_man->select_single_query("SELECT question_id FROM questions WHERE survey_id ="+survey_id, "question_id",q_ids);
-    db_man->delete_query("DELETE FROM questions WHERE survey_id="+survey_id);
-
-    for (int i=0; i<q_ids.size();++i){
-        db_man->select_single_query("SELECT subquestion_id FROM subquestions WHERE question_id ="+q_ids[i], "subquestion_id",sq_ids);
-        db_man->delete_query("DELETE FROM subquestions WHERE question_id="+q_ids[i]);
-
-        for (int j=0; j<sq_ids.size();++j){
-           db_man->delete_query("DELETE FROM data WHERE subquestion_id="+sq_ids[j]);
-        }
-    }
-    db_man->blockSignals(false);
-    ReadDatabase();
-    */
 }
 
 void DbWindow::on_FindPathButton_clicked(){
@@ -130,14 +126,24 @@ void DbWindow::on_FindPathButton_clicked(){
 
     QUrl StartDir("~/Documents");
 
-    file = QFileDialog::getOpenFileUrl(this, tr("here we go"), StartDir,tr("CSV Files (*.csv)") );
+    file = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,tr("CSV Files (*.csv)") );
 
-    ui->DirectoryTextBox->appendPlainText(file.path());
+    ui->NewSurveyPath->appendPlainText(file.path());
 
-    cout << "INITIATE FILEMANAGER" << endl;
+    // OPEN DATA INPUT WINDOW
+    NewPopup = new DataInputPopup(0,db_man);
+    connect (NewPopup, SIGNAL(ok_clicked()),this, SLOT(SaveToDatabase()));
+    NewPopup->show();
 
-    f_man = new FileManager(file.path(),ui->SurveyTypeBox->currentIndex(),db_man);
+    // READ FILE AND SAVE TO DATABASE
 
-     questions = f_man->get_questions();
+
+}
+
+void DbWindow::SaveToDatabase(){
+
+    f_man = new FileManager(file.path(),NewPopup->GetSurveyType(),db_man);
+    f_man->QuestionsToDb(NewPopup->GetLocation(),NewPopup->GetDate());
+    NewPopup->close();
 
 }

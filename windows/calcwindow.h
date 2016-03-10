@@ -1,5 +1,5 @@
-#ifndef CUSTOMSURVEY_H
-#define CUSTOMSURVEY_H
+#ifndef CalcWindow_H
+#define CalcWindow_H
 using namespace std;
 #include <iostream>
 #include <QWidget>
@@ -12,31 +12,28 @@ using namespace std;
 # include "classes/dbmanager.h"
 
 namespace Ui {
-class CustomSurvey;
+class CalcWindow;
 }
 
-class CustomSurvey : public QWidget
+class CalcWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CustomSurvey(QWidget *parent = 0, DbManager *db_manager=0);
-    ~CustomSurvey();
+    explicit CalcWindow(QWidget *parent = 0, DbManager *db_manager=0, FileManager *f_man=0);
+    ~CalcWindow();
 
 
-    void BuildCombo();
+
     void ReadDataToSamples();
     void DisplayStatistics();
 
 public slots:
-    void on_DirectoryButton_clicked();
-    void on_GoButton_clicked();
-    void on_ClearButton_clicked();
     void on_WriteFile_Button_clicked();
-    void on_ToDbButton_clicked();
+
 
 private:
-    Ui::CustomSurvey *ui;
+    Ui::CalcWindow *ui;
 
     QUrl file;
     vector <questiondata> questions;
@@ -46,4 +43,4 @@ private:
 
 };
 
-#endif // CUSTOMSURVEY_H
+#endif // CalcWindow_H

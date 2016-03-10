@@ -17,14 +17,12 @@ FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : 
 
 ReadSurveytypes();
 
-if(ReadCsv())
-    ReadDataToQuestions();
-
-
+if(CsvToDatamatrix())
+    DatamatrixToQuestions();
 
 }
 
-bool FileManager::ReadCsv(){
+bool FileManager::CsvToDatamatrix(){
     bool success = false;
 
     cout << "START READING CSV" << endl;
@@ -76,7 +74,7 @@ bool FileManager::ReadCsv(){
     return success;
 }
 
-void FileManager::ReadDataToQuestions(){
+void FileManager::DatamatrixToQuestions(){
 
     cout << "START READING DATA TO QUESTION OBJECTS" << endl;
 // fills CSV Data from vector < vector <...> > datamatrix to questiondata objects.
@@ -125,7 +123,7 @@ void FileManager::ReadSurveytypes(){
 
 }
 
-void FileManager::WriteSurveyToDb(QString Location){
+void FileManager::QuestionsToDb(QString Location, QString Date){
     cout << "START WRITING SURVEY TO DATABASE!" << endl;
 
     // INSERT SURVEY
@@ -160,13 +158,16 @@ void FileManager::WriteSurveyToDb(QString Location){
 
     }
 
+    questions.clear();
+    datamatrix.clear();
+
 }
 
 vector <questiondata> FileManager::get_questions(){
     return questions;
 }
 
-void FileManager::saveToTextFile(QString filepath, QString text){
+void FileManager::QuestionsToTextFile(QString filepath, QString text){
     cout << "filepath: " << filepath.toStdString() << endl;
 
      ofstream myfile;
@@ -174,3 +175,66 @@ void FileManager::saveToTextFile(QString filepath, QString text){
      myfile << text.toStdString().c_str();
      myfile.close();
 }
+
+void FileManager::DbToQuestions(int survey_id){
+    vector < vector <QString> > survey_data;
+    vector <QString> column_names;
+    column_names.push_back("surveytype_name");
+    column_names.push_back("survey_name");
+    column_names.push_back("survey_date");
+
+    db_man->select_query("SELECT surveytype_name, survey_name, survey_date"
+                         "FROM surveys INNER JOIN surveytypes "
+                         "ON surveys.surveytype_id=surveytypes.surveytype_id"
+                         "WHERE survey_id = "+ QString::number(survey_id),column_names,survey_data);
+
+    questions.clear();
+
+    vector < vector <QString> > question_data;
+    vector < QString > q_column_names;
+    q_column_names.push_back("question_id");
+    q_column_names.push_back("question_name");
+
+    db_man->select_query("SELECT question_id, question_name, question_type FROM questions WHERE survey_id="+QString::number(survey_id),q_column_names, question_data);
+
+    vector <vector <QString> > subquestion_names;
+    vector <QString> sq_col_names;
+    sq_col_names.push_back("subquestion_id");
+    sq_col_names.push_back("subquestion_name");
+
+
+
+    for (int i=0; i<question_data[0].size();++i){
+        questions[i].write_question(question_data[1][i]);
+        questions[i].write_surveytype(question_data[2][i]);
+        db_man->select_query("SELECT subquestion_id, subquestion_name FROM subquestions WHERE question_id ="+question_data[0][i],sq_col_names,subquestion_names);
+
+        for(int j=0; j<subquestion_data[0].size){
+            questions
+        }
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
