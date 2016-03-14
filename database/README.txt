@@ -7,3 +7,5 @@
      4 - age
      5 - School type ( DA Questionaire)
      6 - text
+7- Elearning
+8 Gruppenzahl

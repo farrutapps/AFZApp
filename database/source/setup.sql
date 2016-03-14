@@ -43,6 +43,53 @@ INSERT INTO qtypes(surveytype_id, qtype) VALUES (0, 5); -- 5 - Schooltype (DA Qu
 INSERT INTO qtypes(surveytype_id, qtype) VALUES (0, 0);
 INSERT INTO qtypes(surveytype_id, qtype) VALUES (0, 0);
 
+-- DA Feedbackseminar
+
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,1);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,6);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,7); -- 7 ELEARNING
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,1);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,8); --8  GRUPPENANZAHL
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,0);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,2);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,1);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,6);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,1);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,6);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,1);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,6);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,6);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,4);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,5);
+INSERT INTO qtypes(surveytype_id, qtype) VALUES (1,3);
+
+
+
+
+
+
+
+
 
 
 

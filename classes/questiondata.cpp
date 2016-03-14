@@ -48,7 +48,7 @@ void questiondata::write_question(QString  header){
 }
 
 void questiondata::calc_stat_val(){
-
+double res=0;
     switch (questiontype) {
 
     /** see README in Database folder for explanation of questiontype index. **/
@@ -64,7 +64,7 @@ void questiondata::calc_stat_val(){
         break;
 
    case 3: // age
-        double res;
+
         for (int i=0; i<3;++i){
 
             res=qRound(share_of_input(i+1)*10000.0)/100.0;
@@ -103,8 +103,9 @@ void questiondata::calc_stat_val(){
         break;
 
      case 5: //Schultyp
-
+     {
         res=0;
+        //define minimum percentage to show school
         int min=5;
         for (int i=0; i<12;++i){
 
@@ -151,14 +152,59 @@ void questiondata::calc_stat_val(){
                 break;
 
             }
+
             if(res>min)
             stat_val_string.append(QString::number(res)+"%\n\n");
 
         }
 
         break;
+    }
+    case 7: // E-Learning
+
+        res=0;
+       for (int i=0; i<6;++i){
+
+           res=qRound(share_of_input(i+1)*10000.0)/100.0;
+
+           switch(i+1){
+           case 1: stat_val_string.append("Sehr hilfreich:\n"); break;
+           case 2: stat_val_string.append("Eher hilfreich:\n"); break;
+           case 3: stat_val_string.append("Eher nicht hilfreich:\n"); break;
+           case 4: stat_val_string.append("Nicht hilfreich:\n"); break;
+           case 5: stat_val_string.append("Kenne ich nicht:\n"); break;
+           case 6: stat_val_string.append("Nicht benutzt:\n"); break;
 
 
+           }
+
+           stat_val_string.append(QString::number(res)+"%\n\n");
+
+       }
+
+           stat_val_string.chop(2);
+       break;
+
+           // DA Feedbackseminar: Wie viele Gruppen gemacht
+    case 8:
+    res=0;
+        for (int i=0; i<3;++i){
+
+            res=qRound(share_of_input(i+1)*10000.0)/100.0;
+
+            switch(i+1){
+            case 1: stat_val_string.append("bis zu 2:\n"); break;
+            case 2: stat_val_string.append("3-5:\n"); break;
+            case 3: stat_val_string.append("6-8:\n"); break;
+            case 4: stat_val_string.append("Mehr als 8:\n"); break;
+            }
+
+            stat_val_string.append(QString::number(res)+"%\n\n");
+
+        }
+
+            stat_val_string.chop(2);
+        break;
 
 /*
     default:
@@ -175,7 +221,7 @@ double questiondata::mean_value(){
     double result;
     double sum=0;
 
-
+    // dont count empty cells
     int numberofnd=0;
 
     for (int i=0; i<data.size();++i)

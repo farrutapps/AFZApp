@@ -82,3 +82,5 @@ void CalcWindow::DisplayStatistics(){
     ui->ShowWindow->moveCursor(QTextCursor::Start);
 }
 
+
+
