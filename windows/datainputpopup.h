@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "classes/dbmanager.h"
+#include "QCalendarWidget"
 
 namespace Ui {
 class DataInputPopup;
@@ -27,6 +28,7 @@ signals:
 
 public slots:
     void on_OkButton_clicked();
+
 
 
 private:

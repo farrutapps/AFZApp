@@ -15,6 +15,7 @@ DbWindow::DbWindow(QWidget *parent, DbManager *db_manager) :
     ReadDatabase();
 
     connect (db_man,SIGNAL(database_changed()),this,SLOT(ReadDatabase()));
+    connect (ui->DbTable, SIGNAL(cellDoubleClicked(int,int)),this,SLOT(on_ActionButton_clicked()));
 
 }
 
@@ -42,11 +43,11 @@ void DbWindow::ReadDatabase(){
     TableHeaders.append("Ort");
     TableHeaders.append("Datum");
     TableHeaders.append("Feedbacks");
-    TableHeaders.append("Datenbank ID");
+
 
     ui->DbTable->setHorizontalHeaderLabels(TableHeaders);
     ui->DbTable->horizontalHeader()->setStretchLastSection(false);
-    ui->DbTable->setRowHidden(4,true);
+
 
     vector <vector <QString> > surveydata;
     vector <QString> column_names;
@@ -61,22 +62,33 @@ void DbWindow::ReadDatabase(){
                          "FROM surveys INNER JOIN surveytypes "
                          "ON surveys.surveytype_id=surveytypes.surveytype_id",column_names,surveydata);
 
+  //  ui->DbTable->setColumnHidden(4, true);
 
     if (!surveydata.empty()){
+        int sd_size_inner=surveydata.size();
 
-       // go through inner vectors
-        for (int i=0; i<surveydata[0].size();++i){
-            //go through outer vector
-            for (int j=0; j<surveydata.size();++j){
-                QTableWidgetItem *newItem = new QTableWidgetItem(surveydata[j][i]);
+    // go through outer vectors, columns
+        for (int i=0; i<surveydata.size()-1;++i){
+
+            //go through inner vector, rows
+            for (int j=0; j<surveydata[0].size();++j){
+
+                QTableWidgetItem *newItem = new QTableWidgetItem(surveydata[i][j]);
+
+                //write survey_id into the first cell
+                if (i==0)
+                   newItem->setData(Qt::UserRole,surveydata[sd_size_inner-1][j]);
+
                 ui->DbTable->setItem(j, i, newItem);
             }
         }
     }
 
+
     else {
         cout << "Error reading database. Maybe empty." <<endl;
     }
+
 }
     
 void DbWindow::SetupCombo(){
@@ -86,14 +98,17 @@ void DbWindow::SetupCombo(){
 
 void DbWindow::on_ActionButton_clicked(){
 
-    QString survey_id = ui->DbTable->selectedItems().at(4)->text();
+    QString survey_id = ui->DbTable->selectedItems().at(0)->data(Qt::UserRole).toString();
 
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            // FUNCTION: READ DATA FROM DB TO QUESTIONS
+            f_man=new FileManager(survey_id.toInt(),db_man);
+
             NewCalcWindow = new CalcWindow(0, db_man,f_man);
             NewCalcWindow->show();
+            delete f_man;
+            ReadDatabase();
 
         break;
 
@@ -119,6 +134,7 @@ void DbWindow::DeleteSurvey(QString survey_id){
 
     db_man->delete_query("DELETE FROM surveys WHERE survey_id="+ survey_id);
 
+
 }
 
 void DbWindow::on_FindPathButton_clicked(){
@@ -135,7 +151,7 @@ void DbWindow::on_FindPathButton_clicked(){
     connect (NewPopup, SIGNAL(ok_clicked()),this, SLOT(SaveToDatabase()));
     NewPopup->show();
 
-    // READ FILE AND SAVE TO DATABASE
+    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase is called.
 
 
 }
@@ -145,5 +161,10 @@ void DbWindow::SaveToDatabase(){
     f_man = new FileManager(file.path(),NewPopup->GetSurveyType(),db_man);
     f_man->QuestionsToDb(NewPopup->GetLocation(),NewPopup->GetDate());
     NewPopup->close();
+    delete f_man;
+    ReadDatabase();
 
 }
+
+
+

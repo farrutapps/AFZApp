@@ -26,6 +26,7 @@ public:
     void SetupCombo();
     void DeleteSurvey(QString survey_id);
 
+
 signals:
 
 
@@ -34,6 +35,7 @@ public slots:
     void ReadDatabase();
     void on_FindPathButton_clicked();
     void SaveToDatabase();
+
 
 private:
     Ui::DbWindow *ui;

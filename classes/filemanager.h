@@ -22,6 +22,7 @@ class FileManager
 public:
     FileManager();
     FileManager(QString path, int surveytype_id, DbManager *database_man);
+    FileManager(int survey_id, DbManager *database_man);
 
     bool CsvToDatamatrix();
     void DatamatrixToQuestions();

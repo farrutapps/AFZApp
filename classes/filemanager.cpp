@@ -12,6 +12,11 @@
 
 FileManager::FileManager(){}
 
+FileManager::FileManager(int survey_id, DbManager *database_man) : db_man(database_man)
+{
+    DbToQuestions(survey_id);
+}
+
 FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : file_path(path), surveytype_id(stype_id), db_man(database_man)
 {
 
@@ -94,7 +99,7 @@ void FileManager::DatamatrixToQuestions(){
             temp_question->write_questiontype(question_types[surveytype_id][i].toInt());
             temp_question->write_question(QString::fromStdString(datamatrix[0][i]));
             temp_question->write_subquestion(QString::fromStdString(datamatrix[1][i]));
-            temp_question->write_data_fromStdString(datamatrix,i);
+            temp_question->write_data_fromStdString_matrix(datamatrix,i);
 
             if(temp_question->read_question()!="")
                 ++id;
@@ -133,7 +138,7 @@ void FileManager::QuestionsToDb(QString Location, QString Date){
     vector <int> temp_data;
 
     db_man->insert_query("INSERT INTO surveys(surveytype_id, survey_name, survey_date, survey_datasize) VALUES (" + QString::number(surveytype_id) + ",'" +
-                         Location +"', '02/24/2015', "+ QString::number(questions[0].read_data().size()) + ") RETURNING survey_id","survey_id",survey_id);
+                         Location +"', '"+ Date + "' , "+ QString::number(questions[0].read_data().size()) + ") RETURNING survey_id","survey_id",survey_id);
 
 
     // INSERT QUESTIONS WITH SUBQUESTIONS
@@ -177,6 +182,8 @@ void FileManager::QuestionsToTextFile(QString filepath, QString text){
 }
 
 void FileManager::DbToQuestions(int survey_id){
+
+/*
     vector < vector <QString> > survey_data;
     vector <QString> column_names;
     column_names.push_back("surveytype_name");
@@ -188,33 +195,49 @@ void FileManager::DbToQuestions(int survey_id){
                          "ON surveys.surveytype_id=surveytypes.surveytype_id"
                          "WHERE survey_id = "+ QString::number(survey_id),column_names,survey_data);
 
-    questions.clear();
+  */
 
     vector < vector <QString> > question_data;
     vector < QString > q_column_names;
     q_column_names.push_back("question_id");
     q_column_names.push_back("question_name");
+    q_column_names.push_back("question_type");
 
-    db_man->select_query("SELECT question_id, question_name, question_type FROM questions WHERE survey_id="+QString::number(survey_id),q_column_names, question_data);
 
-    vector <vector <QString> > subquestion_names;
+
+    vector <vector <QString> > subquestion_data;
     vector <QString> sq_col_names;
     sq_col_names.push_back("subquestion_id");
     sq_col_names.push_back("subquestion_name");
 
+    vector <int> data;
 
+    questions.clear();
+    questiondata *temp_question;
+
+   db_man->select_query("SELECT question_id, question_name, question_type FROM questions WHERE survey_id="+QString::number(survey_id),q_column_names, question_data);
 
     for (int i=0; i<question_data[0].size();++i){
-        questions[i].write_question(question_data[1][i]);
-        questions[i].write_surveytype(question_data[2][i]);
-        db_man->select_query("SELECT subquestion_id, subquestion_name FROM subquestions WHERE question_id ="+question_data[0][i],sq_col_names,subquestion_names);
+        subquestion_data.clear();
+        db_man->select_query("SELECT subquestion_id, subquestion_name FROM subquestions WHERE question_id ="+question_data[0][i],sq_col_names,subquestion_data);
 
-        for(int j=0; j<subquestion_data[0].size){
-            questions
+        for (int j =0; j<subquestion_data[0].size();++j){
+            data.clear();
+            db_man->select_single_query("SELECT answer FROM data WHERE subquestion_id ="+ subquestion_data[0][j], "answer",data);
+
+            if (j==0)
+                temp_question = new questiondata(question_data[1][i],subquestion_data[1][j],data,question_data[2][i].toInt());
+
+            else temp_question = new questiondata("",subquestion_data[1][j],data,question_data[2][i].toInt());
+
+            questions.push_back(*temp_question);
+            delete temp_question;
+
         }
+
     }
 
-
+    cout << "DB READ TO QUESTIONS" << endl;
 
 }
 

@@ -1,6 +1,7 @@
 #include "datainputpopup.h"
 #include "ui_DataInputPopup.h"
 
+
 DataInputPopup::DataInputPopup(QWidget *parent, DbManager *database_manager) :
     QWidget(parent),
     ui(new Ui::DataInputPopup),
@@ -42,9 +43,13 @@ QString DataInputPopup::GetLocation(){
 }
 
 QString DataInputPopup::GetDate(){
-    return ui->DateInput->toPlainText();
+    QDate date= ui->CalendarWidget->selectedDate();
+    return QString::number(date.month())+"-" + QString::number(date.day()) + "-" + QString::number(date.year());
+
 }
 
 void DataInputPopup::on_OkButton_clicked(){
     emit ok_clicked();
 }
+
+

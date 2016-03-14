@@ -21,6 +21,7 @@ public:
 
     bool select_query(QString sql_query, vector <QString> &column_names, vector < vector <QString> > &output);
     bool select_single_query(QString sql_query, QString column_name, vector < QString > &output);
+    bool select_single_query(QString sql_query, QString column_name, vector < int > &output);
     bool count_lines(QString table, int &result);
     bool insert_query(QString sql_query);
     bool insert_query(QString sql_query, QString id_name, int &id_of_insert);

@@ -12,13 +12,13 @@ class questiondata
 {
 public:
     questiondata();
-    questiondata(QString, vector < vector <double > >&, int, int);
+    questiondata(QString question_input, QString subquestion_input, vector<int> &data_input, int questiontype);
 
     void write_question(QString );
     void write_subquestion(QString);
     void write_questiontype(int);
-    void write_data(vector <vector <double> >  &, int );
-    void write_data_fromStdString(vector <vector <string> >  &, int );
+    void write_data(vector <int>  & data_input);
+    void write_data_fromStdString_matrix(vector <vector <string> >  &, int );
 
     void push_back_datamatrix(vector <int>);
     void write_ID(int id);

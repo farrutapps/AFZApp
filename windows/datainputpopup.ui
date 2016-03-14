@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>209</width>
-    <height>274</height>
+    <width>310</width>
+    <height>433</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,10 +50,16 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>22</height>
+          </size>
          </property>
          <property name="text">
           <string>Ort:</string>
@@ -63,15 +69,21 @@
        <item>
         <widget class="QPlainTextEdit" name="LocationInput">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>22</height>
+          </size>
+         </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>23</height>
+           <height>22</height>
           </size>
          </property>
         </widget>
@@ -79,31 +91,33 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string>Datum der Umfrage:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="DateInput">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>22</height>
+          </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>23</height>
+           <height>22</height>
           </size>
          </property>
+         <property name="text">
+          <string>Datum der Umfrage:</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
         </widget>
+       </item>
+       <item>
+        <widget class="QCalendarWidget" name="CalendarWidget"/>
        </item>
        <item>
         <widget class="QPushButton" name="OkButton">

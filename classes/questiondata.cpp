@@ -1,18 +1,13 @@
 #include "classes/questiondata.h"
-using namespace std;
+
 
 questiondata::questiondata()
 {
 }
 
-questiondata::questiondata(QString  header, vector< vector <double > > & input, int type, int q_index)
+questiondata::questiondata(QString  question_input, QString subquestion_input, vector <int> & data_input, int questiontype_input) : question(question_input), subquestion(subquestion_input),questiontype(questiontype_input)
 {
-    data.resize(input.size());
-
-    write_question(header);
-    write_data(input,q_index);
-    write_questiontype(type);
-
+    data=data_input;
 }
 
 double questiondata::read_stat_val(){
@@ -20,22 +15,15 @@ double questiondata::read_stat_val(){
     return statistical_value;
 }
 
-void questiondata::write_data(vector <vector <double> >  &fb_values, int q_index){
+void questiondata::write_data(vector <int>  &data_input){
     // reads in the data of question with index q_index
 
-    data.resize(fb_values.size());
-
-    for (int i=0; i<fb_values.size(); ++i){
-
-        data[i]=fb_values[i][q_index];
-
-    }
-
-   cout << "NUMBERS SUCCESSFULLY EXTRACTED" <<endl;
+    data=data_input;
 
 }
 
-void questiondata::write_data_fromStdString(vector<vector<string> > & datamat, int q_index){
+
+void questiondata::write_data_fromStdString_matrix(vector<vector<string> > & datamat, int q_index){
 
 
     data.resize(datamat.size());
