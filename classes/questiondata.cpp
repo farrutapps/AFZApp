@@ -10,6 +10,11 @@ questiondata::questiondata(QString  question_input, QString subquestion_input, v
     data=data_input;
 }
 
+questiondata::questiondata(QString question_input, QString subquestion_input, vector<QString> & text_answers_input, int questiontype_input) : question(question_input), subquestion(subquestion_input),questiontype(questiontype_input)
+{
+    text_answers=text_answers_input;
+}
+
 double questiondata::read_stat_val(){
     calc_stat_val();
     return statistical_value;
@@ -26,14 +31,22 @@ void questiondata::write_data(vector <int>  &data_input){
 void questiondata::write_data_fromStdString_matrix(vector<vector<string> > & datamat, int q_index){
 
 
-    data.resize(datamat.size());
 
-    for (int i=0; i<datamat.size(); ++i){
 
-        data[i]=atoi(datamat[i][q_index].c_str());
+    for (int i=2; i<datamat.size(); ++i){
 
+
+        data.push_back(atoi(datamat[i][q_index].c_str()));
     }
 
+}
+
+void questiondata::write_text_answers_fromStdString_matrix(vector<vector<string> > &datamat, int q_index){
+
+
+    for (int i=2; i<datamat.size(); ++i){
+        text_answers.push_back(QString::fromStdString(datamat[i][q_index]));
+    }
 }
 
 void questiondata::write_questiontype(int question_type){
@@ -160,6 +173,15 @@ double res=0;
 
         break;
     }
+
+    case 6: // Text Question
+        for (int i=0; i<text_answers.size();++i){
+            if(text_answers[i]!="" && text_answers[i]!="-")
+            stat_val_string.append(text_answers[i]+"\n\n");
+        }
+
+    break;
+
     case 7: // E-Learning
 
         res=0;
@@ -206,13 +228,12 @@ double res=0;
             stat_val_string.chop(2);
         break;
 
-/*
     default:
         cout << "ERROR, Question type not implemented!" <<  endl;
         statistical_value=0;
         stat_val_string="error, question type not implemented";
         break;
-        */
+
     }
 
 }
@@ -285,10 +306,6 @@ void questiondata::write_subquestion(QString input){
      subquestion=input;
 }
 
-void questiondata::push_back_datamatrix(vector <int> vec){
-    datamatrix.push_back(vec);
-}
-
 vector <int> questiondata::read_data(){
     return data;
 }
@@ -303,4 +320,8 @@ void questiondata::write_ID(int id){
 
 QString questiondata::read_subquestion(){
     return subquestion;
+}
+
+vector<QString> questiondata::read_text_answers(){
+    return text_answers;
 }

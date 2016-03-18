@@ -33,7 +33,7 @@ signals:
 public slots:
     void on_ActionButton_clicked();
     void ReadDatabase();
-    void on_FindPathButton_clicked();
+    void on_FindPathButton_clicked(bool path_is_set);
     void SaveToDatabase();
 
 

@@ -23,7 +23,9 @@ FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : 
 ReadSurveytypes();
 
 if(CsvToDatamatrix())
-    DatamatrixToQuestions();
+    if(DatamatrixToQuestions())
+        is_ready=true;
+
 
 }
 
@@ -79,13 +81,29 @@ bool FileManager::CsvToDatamatrix(){
     return success;
 }
 
-void FileManager::DatamatrixToQuestions(){
+bool FileManager::DatamatrixToQuestions(){
+    bool success = false;
 
     cout << "START READING DATA TO QUESTION OBJECTS" << endl;
 // fills CSV Data from vector < vector <...> > datamatrix to questiondata objects.
 
     int m = datamatrix[0].size();
 
+    // check dimensions of datamatix
+    if(m!=question_types[surveytype_id].size()){
+
+
+        cout << "ERROR: number of survey questions != number of questiontypes" << endl;
+
+        QMessageBox msgBox;
+        msgBox.setText("FEHLER: Der ausgewählte Ausstellungstyp passt nicht zur .CSV Datei.");
+        msgBox.setInformativeText("Bitte richtigen Ausstellungstyp wählen.");
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
+
+        success = false;
+        return success;
+    }
 
     int id=0;
 
@@ -99,19 +117,27 @@ void FileManager::DatamatrixToQuestions(){
             temp_question->write_questiontype(question_types[surveytype_id][i].toInt());
             temp_question->write_question(QString::fromStdString(datamatrix[0][i]));
             temp_question->write_subquestion(QString::fromStdString(datamatrix[1][i]));
-            temp_question->write_data_fromStdString_matrix(datamatrix,i);
+
+            if(temp_question->read_question_type()!=6)
+                temp_question->write_data_fromStdString_matrix(datamatrix,i);
+
+            else
+                temp_question->write_text_answers_fromStdString_matrix(datamatrix,i);
 
             if(temp_question->read_question()!="")
                 ++id;
 
-                temp_question->write_ID(id);      // a question and its subquestions share the same id
 
-                questions.push_back(*temp_question);
-                delete temp_question;
+            temp_question->write_ID(id);      // a question and its subquestions share the same id
+
+            questions.push_back(*temp_question);
+            delete temp_question;
             }
 
         }
 
+    success=true;
+    return success;
 }
 
 void FileManager::ReadSurveytypes(){
@@ -135,7 +161,8 @@ void FileManager::QuestionsToDb(QString Location, QString Date){
     int survey_id=0;
     int question_id=0;
     int subquestion_id=0;
-    vector <int> temp_data;
+    vector <int> temp_data_numeric;
+    vector <QString> temp_data_qstring;
 
     db_man->insert_query("INSERT INTO surveys(surveytype_id, survey_name, survey_date, survey_datasize) VALUES (" + QString::number(surveytype_id) + ",'" +
                          Location +"', '"+ Date + "' , "+ QString::number(questions[0].read_data().size()) + ") RETURNING survey_id","survey_id",survey_id);
@@ -154,11 +181,22 @@ void FileManager::QuestionsToDb(QString Location, QString Date){
          // NOW INSERT DATA CONNECTED TO SUBQUESTIONS
 
 
-        temp_data.clear();
-        temp_data=questions[i].read_data();
-        for (int j=0; j<temp_data.size(); ++j){
 
-            db_man->insert_query("INSERT INTO data(subquestion_id, answer) VALUES(" + QString::number(subquestion_id) + ", " + QString::number(temp_data[j]) +")");
+
+        if(questions[i].read_question_type()!=6){
+            temp_data_numeric.clear();
+            temp_data_numeric=questions[i].read_data();
+            for (int j=0; j<temp_data_numeric.size(); ++j){
+                db_man->insert_query("INSERT INTO data_numeric(subquestion_id, answer_numeric) VALUES(" + QString::number(subquestion_id) + ", " + QString::number(temp_data_numeric[j]) +")");
+            }
+        }
+        else{
+            temp_data_qstring.clear();
+            temp_data_qstring=questions[i].read_text_answers();
+            for (int j=0; j<temp_data_qstring.size(); ++j){
+                db_man->insert_query("INSERT INTO data_text(subquestion_id, answer_text) VALUES(" + QString::number(subquestion_id) + ", '" + temp_data_qstring[j] +"')");
+            }
+
         }
 
     }
@@ -183,19 +221,21 @@ void FileManager::QuestionsToTextFile(QString filepath, QString text){
 
 void FileManager::DbToQuestions(int survey_id){
 
-/*
     vector < vector <QString> > survey_data;
     vector <QString> column_names;
     column_names.push_back("surveytype_name");
     column_names.push_back("survey_name");
     column_names.push_back("survey_date");
 
-    db_man->select_query("SELECT surveytype_name, survey_name, survey_date"
+    db_man->select_query("SELECT surveytype_name, survey_name, survey_date "
                          "FROM surveys INNER JOIN surveytypes "
-                         "ON surveys.surveytype_id=surveytypes.surveytype_id"
+                         "ON surveys.surveytype_id=surveytypes.surveytype_id "
                          "WHERE survey_id = "+ QString::number(survey_id),column_names,survey_data);
 
-  */
+
+    survey_facts.push_back(survey_data[0][0]);
+    survey_facts.push_back(survey_data[1][0]);
+    survey_facts.push_back(survey_data[2][0]);
 
     vector < vector <QString> > question_data;
     vector < QString > q_column_names;
@@ -203,14 +243,13 @@ void FileManager::DbToQuestions(int survey_id){
     q_column_names.push_back("question_name");
     q_column_names.push_back("question_type");
 
-
-
     vector <vector <QString> > subquestion_data;
     vector <QString> sq_col_names;
     sq_col_names.push_back("subquestion_id");
     sq_col_names.push_back("subquestion_name");
 
     vector <int> data;
+    vector <QString> text_answers;
 
     questions.clear();
     questiondata *temp_question;
@@ -222,14 +261,27 @@ void FileManager::DbToQuestions(int survey_id){
         db_man->select_query("SELECT subquestion_id, subquestion_name FROM subquestions WHERE question_id ="+question_data[0][i],sq_col_names,subquestion_data);
 
         for (int j =0; j<subquestion_data[0].size();++j){
-            data.clear();
-            db_man->select_single_query("SELECT answer FROM data WHERE subquestion_id ="+ subquestion_data[0][j], "answer",data);
 
-            if (j==0)
+
+            data.clear();
+            db_man->select_single_query("SELECT answer_numeric FROM data_numeric WHERE subquestion_id ="+ subquestion_data[0][j], "answer_numeric",data);
+
+            text_answers.clear();
+            db_man->select_single_query("SELECT answer_text FROM data_text WHERE subquestion_id ="+ subquestion_data[0][j], "answer_text",text_answers);
+
+            if (j==0){
+                if(!data.empty())
                 temp_question = new questiondata(question_data[1][i],subquestion_data[1][j],data,question_data[2][i].toInt());
 
-            else temp_question = new questiondata("",subquestion_data[1][j],data,question_data[2][i].toInt());
+                else temp_question = new questiondata(question_data[1][i],subquestion_data[1][j],text_answers,question_data[2][i].toInt());
+            }
 
+            else {
+                if(!data.empty())
+                    temp_question = new questiondata("",subquestion_data[1][j],data,question_data[2][i].toInt());
+
+                else temp_question = new questiondata("",subquestion_data[1][j],text_answers,question_data[2][i].toInt());
+            }
             questions.push_back(*temp_question);
             delete temp_question;
 
@@ -237,14 +289,18 @@ void FileManager::DbToQuestions(int survey_id){
 
     }
 
-    cout << "DB READ TO QUESTIONS" << endl;
+    cout << "FINISHED READING DB TO QUESTIONS" << endl;
 
 }
 
+vector<QString> FileManager::ReadSurveyFacts(){
+    return survey_facts;
+}
 
 
-
-
+bool FileManager::IsReady(){
+    return is_ready;
+}
 
 
 

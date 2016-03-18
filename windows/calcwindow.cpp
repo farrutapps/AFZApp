@@ -41,9 +41,8 @@ void CalcWindow::on_WriteFile_Button_clicked(){
 
     QString text = ui->ShowWindow->toPlainText();
 
-    QString filename = file.fileName();
-    filename.chop(4);
-    filename+="_Statistik.txt";
+
+    QString filename="Feedback_Auswertung_"+ f_man->ReadSurveyFacts()[0]+ "_" + f_man->ReadSurveyFacts()[1];
 
     QString filepath=directory[0].path();
     filepath=filepath+"/"+filename;
@@ -54,9 +53,25 @@ void CalcWindow::on_WriteFile_Button_clicked(){
 
 void CalcWindow::DisplayStatistics(){
 
-    QString introduction = "<i>Falls nicht anders angegeben, wurden die Mittelwerte der Antworten ermittelt. Möchgliche Antworten waren: 1,2,3,4. Für die Wanderausstellungen giltet: 1 bedeutet volle Zusstimmung, 4 gar keine Zustimmung <\i>" ;
+   vector <QString> survey_facts = f_man->ReadSurveyFacts();
+
+    QString header = "<b>Feedback Auswertung des "+survey_facts[0]+"s in "+survey_facts[1] + " am " + survey_facts[2] +"</b>";
+
+
+    QString introduction = "<i>Falls nicht anders angegeben, wurden die Mittelwerte der Antworten ermittelt. Möchgliche Antworten waren: 1,2,3,4. In der Regel giltet: 1 bedeutet volle Zusstimmung, 4 gar keine Zustimmung \n \n <\i>" ;
+
+    ui->ShowWindow->append(header);
+    ui->ShowWindow->append("");
+
     ui->ShowWindow->append(introduction);
     ui->ShowWindow->append("");
+
+    ui->ShowWindow->append("<b>Teilnehmende insgesamt:</b>");
+    int size = questions[0].read_data().size();
+    ui->ShowWindow->append(QString::number(size));
+    ui->ShowWindow->append("");
+
+    ui->ShowWindow->moveCursor(QTextCursor::End);
 
     for (int i=0; i<questions.size();++i){
      // display statistical results, if question type is not unknown and is not a text question.
@@ -76,10 +91,21 @@ void CalcWindow::DisplayStatistics(){
         }
     }
 
-    ui->ShowWindow->append("<b>Teilnehmende insgesamt:</b>");
-    int size = questions[0].read_data().size();
-    ui->ShowWindow->append(QString::number(size));
-    ui->ShowWindow->moveCursor(QTextCursor::Start);
+    for (int i=0; i<questions.size();++i){
+        if(questions[i].read_question_type()==6  ){
+            QString MainQuestion="<b>"+questions[i].read_question()+"</b>";
+
+            if(questions[i].read_question()!="")
+            ui->ShowWindow->append(MainQuestion);
+            ui->ShowWindow->append("");
+            ui->ShowWindow->append(questions[i].read_stat_val_string());
+
+        }
+    }
+
+
+ui->ShowWindow->moveCursor(QTextCursor::Start);
+
 }
 
 

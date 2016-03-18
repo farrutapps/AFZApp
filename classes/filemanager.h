@@ -25,8 +25,9 @@ public:
     FileManager(int survey_id, DbManager *database_man);
 
     bool CsvToDatamatrix();
-    void DatamatrixToQuestions();
+    bool DatamatrixToQuestions();
     void ReadSurveytypes();
+
 
     void QuestionsToDb(QString Location , QString Date);
 
@@ -34,7 +35,8 @@ public:
     void DbToQuestions(int survey_id);
 
     vector <questiondata> get_questions();
-
+    vector <QString> ReadSurveyFacts();
+    bool IsReady();
 
 private:
     QString file_path;
@@ -42,10 +44,10 @@ private:
     DbManager *db_man;
     vector <vector <QString> > question_types;
 
-
+    vector <QString> survey_facts;
     vector <vector <string> > datamatrix;
     vector <questiondata> questions;
-
+    bool is_ready=false;
 
 signals:
 

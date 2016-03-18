@@ -8,13 +8,15 @@ DataInputPopup::DataInputPopup(QWidget *parent, DbManager *database_manager) :
     db_man(database_manager)
 {
     ui->setupUi(this);
-
+    ui->OkButton->setEnabled(false);
     QFont font;
     font.setBold(true);
     font.setPointSize(12);
     ui->HeaderLabel->setFont(font);
 
     SetupCombo();
+
+
 }
 
 DataInputPopup::~DataInputPopup()
@@ -23,7 +25,7 @@ DataInputPopup::~DataInputPopup()
 }
 
 void DataInputPopup::SetupCombo(){
-    vector <QString> Surveytypes;
+
 
     db_man->select_single_query("SELECT surveytype_name FROM surveytypes", "surveytype_name", Surveytypes);
 
@@ -32,6 +34,8 @@ void DataInputPopup::SetupCombo(){
     ui->SurveyTypeBox->addItem(Surveytypes[i]);
     }
 
+    ui->SurveyTypeBox->addItem("-- Bitte Seminartyp auswählen --");
+    ui->SurveyTypeBox->setCurrentIndex(Surveytypes.size());
 }
 
 int DataInputPopup::GetSurveyType(){
@@ -52,4 +56,18 @@ void DataInputPopup::on_OkButton_clicked(){
     emit ok_clicked();
 }
 
+void DataInputPopup::on_CancelButton_clicked(){
+    close();
+}
 
+void DataInputPopup::on_SurveyTypeBox_currentIndexChanged(int index){
+    if (index!=Surveytypes.size() && ui->LocationInput->toPlainText()!="")
+        ui->OkButton->setEnabled(true);
+
+    else ui->OkButton->setEnabled(false);
+}
+
+
+void DataInputPopup::on_LocationInput_textChanged(){
+    on_SurveyTypeBox_currentIndexChanged(ui->SurveyTypeBox->currentIndex());
+}

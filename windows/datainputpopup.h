@@ -28,12 +28,16 @@ signals:
 
 public slots:
     void on_OkButton_clicked();
-
+    void on_CancelButton_clicked();
+    void on_SurveyTypeBox_currentIndexChanged(int index);
+    void on_LocationInput_textChanged();
 
 
 private:
     Ui::DataInputPopup *ui;
     DbManager *db_man;
+
+    vector <QString> Surveytypes;
 };
 
 #endif // DataInputPopup_H

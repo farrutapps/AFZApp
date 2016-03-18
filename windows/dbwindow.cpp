@@ -26,8 +26,8 @@ DbWindow::~DbWindow()
 
 void DbWindow::SetupTable(){
     ui->DbTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->DbTable->setRowCount(10);
-    ui->DbTable->setColumnCount(5);
+    ui->DbTable->setRowCount(50);
+    ui->DbTable->setColumnCount(4);
 
     ui->DbTable->setDragEnabled(false);
     ui->DbTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -41,7 +41,7 @@ void DbWindow::ReadDatabase(){
     QStringList TableHeaders;
     TableHeaders.append("Seminar");
     TableHeaders.append("Ort");
-    TableHeaders.append("Datum");
+    TableHeaders.append("Datum [J M T]");
     TableHeaders.append("Feedbacks");
 
 
@@ -62,7 +62,7 @@ void DbWindow::ReadDatabase(){
                          "FROM surveys INNER JOIN surveytypes "
                          "ON surveys.surveytype_id=surveytypes.surveytype_id",column_names,surveydata);
 
-  //  ui->DbTable->setColumnHidden(4, true);
+
 
     if (!surveydata.empty()){
         int sd_size_inner=surveydata.size();
@@ -82,6 +82,8 @@ void DbWindow::ReadDatabase(){
                 ui->DbTable->setItem(j, i, newItem);
             }
         }
+
+    ui->DbTable->sortByColumn(2);
     }
 
 
@@ -92,6 +94,7 @@ void DbWindow::ReadDatabase(){
 }
     
 void DbWindow::SetupCombo(){
+
     ui->ActionCombo->addItem("Umfrage Auswerten");
     ui->ActionCombo->addItem("Ausgewählten Eintrag löschen");
 }
@@ -137,14 +140,13 @@ void DbWindow::DeleteSurvey(QString survey_id){
 
 }
 
-void DbWindow::on_FindPathButton_clicked(){
+void DbWindow::on_FindPathButton_clicked(bool path_is_set=0){
 
-
-    QUrl StartDir("~/Documents");
-
-    file = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,tr("CSV Files (*.csv)") );
-
-    ui->NewSurveyPath->appendPlainText(file.path());
+    if(!path_is_set)
+    {QUrl StartDir("~/Documents");
+        file = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,tr("CSV Files (*.csv)") );
+        ui->NewSurveyPath->appendPlainText(file.path());
+    }
 
     // OPEN DATA INPUT WINDOW
     NewPopup = new DataInputPopup(0,db_man);
@@ -159,10 +161,20 @@ void DbWindow::on_FindPathButton_clicked(){
 void DbWindow::SaveToDatabase(){
 
     f_man = new FileManager(file.path(),NewPopup->GetSurveyType(),db_man);
-    f_man->QuestionsToDb(NewPopup->GetLocation(),NewPopup->GetDate());
-    NewPopup->close();
+
+    if(f_man->IsReady()){
+
+        f_man->QuestionsToDb(NewPopup->GetLocation(),NewPopup->GetDate());
+        NewPopup->close();
+        ReadDatabase();
+    }
+
+    else {
+        NewPopup->close();
+        on_FindPathButton_clicked(true);
+
+    }
     delete f_man;
-    ReadDatabase();
 
 }
 
