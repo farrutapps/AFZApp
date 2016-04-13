@@ -21,13 +21,14 @@ class FileManager
 {
 public:
     FileManager();
-    FileManager(QString path, int surveytype_id, DbManager *database_man);
-    FileManager(int survey_id, DbManager *database_man);
+    FileManager(QString path, int stype_id, DbManager *database_man);
+    FileManager(int survey_id, int stype_id, DbManager *database_man);
 
     bool CsvToDatamatrix();
     bool DatamatrixToQuestions();
-    void ReadSurveytypes();
+    void ReadSurveytypes(bool cut_useless=false);
 
+    QDate SQLDateToQtDate(QString SQLDate);
 
     void QuestionsToDb(QString Location , QString Date);
 
@@ -47,7 +48,7 @@ private:
     vector <QString> survey_facts;
     vector <vector <string> > datamatrix;
     vector <questiondata> questions;
-    bool is_ready=false;
+    bool is_ready;
 
 signals:
 

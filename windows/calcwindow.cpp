@@ -6,6 +6,7 @@
 #include <classes/questiondata.h>
 #include <fstream>
 #include <windows/dbwindow.h>
+#include <QCloseEvent>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ CalcWindow::CalcWindow(QWidget *parent, DbManager *db_manager, FileManager *file
     ui->ShowWindow->setReadOnly(true);
     questions=f_man->get_questions();
     DisplayStatistics();
+
 
 }
 
@@ -41,8 +43,8 @@ void CalcWindow::on_WriteFile_Button_clicked(){
 
     QString text = ui->ShowWindow->toPlainText();
 
-
-    QString filename="Feedback_Auswertung_"+ f_man->ReadSurveyFacts()[0]+ "_" + f_man->ReadSurveyFacts()[1];
+    vector <QString> survey_facts=f_man->ReadSurveyFacts();
+    QString filename="Feedback_Auswertung_"+ survey_facts[0]+ "_" + survey_facts[1]+".txt";
 
     QString filepath=directory[0].path();
     filepath=filepath+"/"+filename;
@@ -108,5 +110,10 @@ ui->ShowWindow->moveCursor(QTextCursor::Start);
 
 }
 
-
+void CalcWindow::closeEvent (QCloseEvent *event)
+{
+        delete f_man;
+    cout <<"wahahaha HAHA haha HAHAAHAH" << endl;
+        event->accept();
+    }
 

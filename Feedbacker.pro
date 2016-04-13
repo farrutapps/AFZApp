@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     windows/flexiblesurvey.cpp \
     windows/mainwindow.cpp \
     windows/calcwindow.cpp \
-    windows/datainputpopup.cpp
+    windows/datainputpopup.cpp \
+    windows/preferenceswindow.cpp
 
 HEADERS  += classes/dbmanager.h \
     classes/filemanager.h \
@@ -30,10 +31,12 @@ HEADERS  += classes/dbmanager.h \
     windows/flexiblesurvey.h \
     windows/mainwindow.h \
     windows/calcwindow.h \
-    windows/datainputpopup.h
+    windows/datainputpopup.h \
+    windows/preferenceswindow.h
 
 FORMS    += windows/mainwindow.ui \
    windows/flexiblesurvey.ui \
     windows/dbwindow.ui \
     windows/calcwindow.ui \
-    windows/datainputpopup.ui
+    windows/datainputpopup.ui \
+    windows/preferenceswindow.ui

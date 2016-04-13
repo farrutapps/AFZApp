@@ -32,7 +32,6 @@ void DbWindow::SetupTable(){
     ui->DbTable->setDragEnabled(false);
     ui->DbTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-
 }
 
 void DbWindow::ReadDatabase(){
@@ -73,9 +72,11 @@ void DbWindow::ReadDatabase(){
             //go through inner vector, rows
             for (int j=0; j<surveydata[0].size();++j){
 
+
+
                 QTableWidgetItem *newItem = new QTableWidgetItem(surveydata[i][j]);
 
-                //write survey_id into the first cell
+                //write survey_id behind the first cell
                 if (i==0)
                    newItem->setData(Qt::UserRole,surveydata[sd_size_inner-1][j]);
 
@@ -102,20 +103,14 @@ void DbWindow::SetupCombo(){
 void DbWindow::on_ActionButton_clicked(){
 
     QString survey_id = ui->DbTable->selectedItems().at(0)->data(Qt::UserRole).toString();
+    vector<QString> surveytype_id;
+    db_man->select_single_query("SELECT surveytype_id FROM surveys WHERE survey_id = "+survey_id,"surveytype_id",surveytype_id );
 
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            f_man=new FileManager(survey_id.toInt(),db_man);
-
-            NewCalcWindow = new CalcWindow(0, db_man,f_man);
-            NewCalcWindow->show();
-            delete f_man;
-            ReadDatabase();
-
+            EvaluateSurvey(survey_id.toInt(), surveytype_id[0].toInt());
         break;
-
-
 
         case 1:
             QMessageBox msgBox;
@@ -137,7 +132,6 @@ void DbWindow::DeleteSurvey(QString survey_id){
 
     db_man->delete_query("DELETE FROM surveys WHERE survey_id="+ survey_id);
 
-
 }
 
 void DbWindow::on_FindPathButton_clicked(bool path_is_set=0){
@@ -153,7 +147,7 @@ void DbWindow::on_FindPathButton_clicked(bool path_is_set=0){
     connect (NewPopup, SIGNAL(ok_clicked()),this, SLOT(SaveToDatabase()));
     NewPopup->show();
 
-    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase is called.
+    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
 
 
 }
@@ -178,5 +172,10 @@ void DbWindow::SaveToDatabase(){
 
 }
 
+void DbWindow::EvaluateSurvey(int survey_id, int surveytype_id){
+    f_man=new FileManager(survey_id,surveytype_id,db_man);
 
+    NewCalcWindow = new CalcWindow(0, db_man,f_man);
+    NewCalcWindow->show();
+}
 

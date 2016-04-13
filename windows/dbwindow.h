@@ -25,7 +25,7 @@ public:
     void SetupTable();
     void SetupCombo();
     void DeleteSurvey(QString survey_id);
-
+    void EvaluateSurvey(int survey_id, int surveytype_id);
 
 signals:
 

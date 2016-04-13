@@ -27,7 +27,7 @@ public:
 
     void ReadDataToSamples();
     void DisplayStatistics();
-
+    void closeEvent (QCloseEvent *event);
 public slots:
     void on_WriteFile_Button_clicked();
 
