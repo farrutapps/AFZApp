@@ -2,10 +2,10 @@
 #include "ui_DataInputPopup.h"
 
 
-DataInputPopup::DataInputPopup(QWidget *parent, DbManager *database_manager) :
+DataInputPopup::DataInputPopup(QWidget *parent, DbManager *databaseManager) :
     QWidget(parent),
     ui(new Ui::DataInputPopup),
-    db_man(database_manager)
+    dbMan(databaseManager)
 {
     ui->setupUi(this);
     ui->OkButton->setEnabled(false);
@@ -14,7 +14,7 @@ DataInputPopup::DataInputPopup(QWidget *parent, DbManager *database_manager) :
     font.setPointSize(12);
     ui->HeaderLabel->setFont(font);
 
-    SetupCombo();
+    setupCombo();
 
 
 }
@@ -24,36 +24,36 @@ DataInputPopup::~DataInputPopup()
     delete ui;
 }
 
-void DataInputPopup::SetupCombo(){
+void DataInputPopup::setupCombo(){
 
 
-    db_man->select_single_query("SELECT surveytype_name FROM surveytypes", "surveytype_name", Surveytypes);
+    dbMan->selectSingleQuery("SELECT surveytype_name FROM surveytypes", "surveytype_name", surveytypes);
 
 
-    for(int i =0; i<Surveytypes.size();++i){
-    ui->SurveyTypeBox->addItem(Surveytypes[i]);
+    for(int i =0; i<surveytypes.size();++i){
+    ui->SurveyTypeBox->addItem(surveytypes[i]);
     }
 
     ui->SurveyTypeBox->addItem("-- Bitte Seminartyp auswählen --");
-    ui->SurveyTypeBox->setCurrentIndex(Surveytypes.size());
+    ui->SurveyTypeBox->setCurrentIndex(surveytypes.size());
 }
 
-int DataInputPopup::GetSurveyType(){
+int DataInputPopup::getSurveyType(){
     return ui->SurveyTypeBox->currentIndex();
 }
 
-QString DataInputPopup::GetLocation(){
+QString DataInputPopup::getLocation(){
     return ui->LocationInput->toPlainText();
 }
 
-QString DataInputPopup::GetDate(){
+QString DataInputPopup::getDate(){
     QDate date= ui->CalendarWidget->selectedDate();
     return QString::number(date.month())+"-" + QString::number(date.day()) + "-" + QString::number(date.year());
 
 }
 
 void DataInputPopup::on_OkButton_clicked(){
-    emit ok_clicked();
+    emit okClicked();
 }
 
 void DataInputPopup::on_CancelButton_clicked(){
@@ -61,7 +61,7 @@ void DataInputPopup::on_CancelButton_clicked(){
 }
 
 void DataInputPopup::on_SurveyTypeBox_currentIndexChanged(int index){
-    if (index!=Surveytypes.size() && ui->LocationInput->toPlainText()!="")
+    if (index!=surveytypes.size() && ui->LocationInput->toPlainText()!="")
         ui->OkButton->setEnabled(true);
 
     else ui->OkButton->setEnabled(false);

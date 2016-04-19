@@ -19,21 +19,21 @@ public:
     explicit DbManager(const QString& path, QWidget *parent = 0);
 
 
-    bool select_query(QString sql_query, vector <QString> &column_names, vector < vector <QString> > &output);
-    bool select_single_query(QString sql_query, QString column_name, vector < QString > &output);
-    bool select_single_query(QString sql_query, QString column_name, vector < int > &output);
-    bool count_lines(QString table, int &result);
-    bool insert_query(QString sql_query);
-    bool insert_query(QString sql_query, QString id_name, int &id_of_insert);
-    bool delete_query(QString sql_query);
+    bool selectQuery(QString sqlQuery, vector <QString> &columnNames, vector < vector <QString> > &output);
+    bool selectSingleQuery(QString sqlQuery, QString columnName, vector < QString > &output);
+    bool selectSingleQuery(QString sqlQuery, QString columnName, vector < int > &output);
+    bool countLines(QString table, int &result);
+    bool insertQuery(QString sqlQuery);
+    bool insertQuery(QString sqlQuery, QString idName, int &idOfInsert);
+    bool deleteQuery(QString sqlQuery);
 
 
 
 private:
-    QSqlDatabase m_db;
+    QSqlDatabase mDb;
 
 signals:
-    void database_changed();
+    void databaseChanged();
 
 public slots:
 

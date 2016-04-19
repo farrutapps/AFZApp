@@ -5,7 +5,7 @@
 #include <QMessageBox>
 #include <QUrl>
 #include "classes/dbmanager.h"
-#include "classes/questiondata.h"
+#include "classes/question.h"
 #include "classes/filemanager.h"
 #include "windows/calcwindow.h"
 #include "windows/datainputpopup.h"
@@ -19,31 +19,31 @@ class DbWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit DbWindow(QWidget *parent = 0, DbManager * db_manager= 0 );
+    explicit DbWindow(QWidget *parent = 0, DbManager * dbManager= 0 );
     ~DbWindow();
 
-    void SetupTable();
-    void SetupCombo();
-    void DeleteSurvey(QString survey_id);
-    void EvaluateSurvey(int survey_id, int surveytype_id);
+    void setupTable();
+    void setupCombo();
+    void deleteSurvey(QString survey_id);
+    void evaluateSurvey(int survey_id, int surveytype_id);
 
 signals:
 
 
 public slots:
     void on_ActionButton_clicked();
-    void ReadDatabase();
+    void readDatabase();
     void on_FindPathButton_clicked(bool path_is_set);
-    void SaveToDatabase();
+    void saveToDatabase();
 
 
 private:
     Ui::DbWindow *ui;
-    DbManager *db_man;
-    FileManager *f_man;
-    DataInputPopup *NewPopup;
+    DbManager *dbMan;
+    FileManager *fMan;
+    DataInputPopup *newPopup;
     QUrl file;
-    CalcWindow * NewCalcWindow;
+    CalcWindow *newCalcWindow;
 //    FileManager *f_man;
 //    vector <questiondata> questions;
 

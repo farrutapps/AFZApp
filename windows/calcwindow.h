@@ -7,7 +7,7 @@ using namespace std;
 #include <fstream>
 #include <cassert>
 
-#include "classes/questiondata.h"
+#include "classes/question.h"
 #include "classes/filemanager.h"
 # include "classes/dbmanager.h"
 
@@ -20,13 +20,13 @@ class CalcWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit CalcWindow(QWidget *parent = 0, DbManager *db_manager=0, FileManager *f_man=0);
+    explicit CalcWindow(QWidget *parent = 0, DbManager *db_manager=0, FileManager *fMan=0);
     ~CalcWindow();
 
 
 
-    void ReadDataToSamples();
-    void DisplayStatistics();
+
+    void displayStatistics();
     void closeEvent (QCloseEvent *event);
 public slots:
     void on_WriteFile_Button_clicked();
@@ -36,10 +36,10 @@ private:
     Ui::CalcWindow *ui;
 
     QUrl file;
-    vector <questiondata> questions;
+    vector <Question> questions;
 
-    DbManager *db_man;
-    FileManager *f_man;
+    DbManager *dbMan;
+    FileManager *fMan;
 
 };
 

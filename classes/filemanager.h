@@ -1,7 +1,7 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include "classes/questiondata.h"
+#include "classes/question.h"
 #include "classes/dbmanager.h"
 
 #include <QWidget>
@@ -24,31 +24,32 @@ public:
     FileManager(QString path, int stype_id, DbManager *database_man);
     FileManager(int survey_id, int stype_id, DbManager *database_man);
 
-    bool CsvToDatamatrix();
-    bool DatamatrixToQuestions();
-    void ReadSurveytypes(bool cut_useless=false);
+    bool csvToDatamatrix();
+    bool datamatrixToQuestions();
+    void getSurveytypes(bool cutUseless=false);
 
-    QDate SQLDateToQtDate(QString SQLDate);
 
-    void QuestionsToDb(QString Location , QString Date);
 
-    void QuestionsToTextFile(QString filepath, QString text);
-    void DbToQuestions(int survey_id);
+    void questionsToDb(QString location, QString date);
 
-    vector <questiondata> get_questions();
-    vector <QString> ReadSurveyFacts();
-    bool IsReady();
+    void questionsToTextFile(QString filePath, QString text);
+    void dbToQuestions(int surveyId);
+
+    vector <Question> getQuestions();
+    vector <QString> getSurveyFacts();
+
+    bool getIsReady();
 
 private:
-    QString file_path;
-    int surveytype_id;
-    DbManager *db_man;
-    vector <vector <QString> > question_types;
+    QString filePath;
+    int surveyTypeId;
+    DbManager *dbMan;
+    vector <vector <QString> > questionTypes;
 
-    vector <QString> survey_facts;
-    vector <vector <string> > datamatrix;
-    vector <questiondata> questions;
-    bool is_ready;
+    vector <QString> surveyFacts;
+    vector <vector <string> > dataMatrix;
+    vector <Question> questions;
+    bool isReady;
 
 signals:
 

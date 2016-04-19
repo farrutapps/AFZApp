@@ -14,17 +14,17 @@ class DataInputPopup : public QWidget
     Q_OBJECT
 
 public:
-    explicit DataInputPopup(QWidget *parent = 0, DbManager *database_manager=NULL);
+    explicit DataInputPopup(QWidget *parent = 0, DbManager *databaseManager=NULL);
     ~DataInputPopup();
 
-    void SetupCombo();
+    void setupCombo();
 
-    QString GetDate();
-    int GetSurveyType();
-    QString GetLocation();
+    QString getDate();
+    int getSurveyType();
+    QString getLocation();
 
 signals:
-    void ok_clicked();
+    void okClicked();
 
 public slots:
     void on_OkButton_clicked();
@@ -35,9 +35,9 @@ public slots:
 
 private:
     Ui::DataInputPopup *ui;
-    DbManager *db_man;
+    DbManager *dbMan;
 
-    vector <QString> Surveytypes;
+    vector <QString> surveytypes;
 };
 
 #endif // DataInputPopup_H

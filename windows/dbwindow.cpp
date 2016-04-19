@@ -5,16 +5,16 @@
 #include "classes/filemanager.h"
 #include "QFileDialog"
 
-DbWindow::DbWindow(QWidget *parent, DbManager *db_manager) :
+DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
     QWidget(parent),
-    ui(new Ui::DbWindow), db_man(db_manager)
+    ui(new Ui::DbWindow), dbMan(dbManager)
 {
     ui->setupUi(this);
-    SetupTable();
-    SetupCombo();
-    ReadDatabase();
+    setupTable();
+    setupCombo();
+    readDatabase();
 
-    connect (db_man,SIGNAL(database_changed()),this,SLOT(ReadDatabase()));
+    connect (dbMan,SIGNAL(databaseChanged()),this,SLOT(readDatabase()));
     connect (ui->DbTable, SIGNAL(cellDoubleClicked(int,int)),this,SLOT(on_ActionButton_clicked()));
 
 }
@@ -24,7 +24,7 @@ DbWindow::~DbWindow()
     delete ui;
 }
 
-void DbWindow::SetupTable(){
+void DbWindow::setupTable(){
     ui->DbTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->DbTable->setRowCount(50);
     ui->DbTable->setColumnCount(4);
@@ -34,7 +34,7 @@ void DbWindow::SetupTable(){
 
 }
 
-void DbWindow::ReadDatabase(){
+void DbWindow::readDatabase(){
     //setheaders
     ui->DbTable->clear();
     QStringList TableHeaders;
@@ -57,7 +57,7 @@ void DbWindow::ReadDatabase(){
     column_names.push_back("survey_datasize");
     column_names.push_back("survey_id");
 
-    db_man->select_query("SELECT survey_name, survey_date, survey_datasize, survey_id, surveytype_name  "
+    dbMan->selectQuery("SELECT survey_name, survey_date, survey_datasize, survey_id, surveytype_name  "
                          "FROM surveys INNER JOIN surveytypes "
                          "ON surveys.surveytype_id=surveytypes.surveytype_id",column_names,surveydata);
 
@@ -94,7 +94,7 @@ void DbWindow::ReadDatabase(){
 
 }
     
-void DbWindow::SetupCombo(){
+void DbWindow::setupCombo(){
 
     ui->ActionCombo->addItem("Umfrage Auswerten");
     ui->ActionCombo->addItem("Ausgewählten Eintrag löschen");
@@ -104,12 +104,12 @@ void DbWindow::on_ActionButton_clicked(){
 
     QString survey_id = ui->DbTable->selectedItems().at(0)->data(Qt::UserRole).toString();
     vector<QString> surveytype_id;
-    db_man->select_single_query("SELECT surveytype_id FROM surveys WHERE survey_id = "+survey_id,"surveytype_id",surveytype_id );
+    dbMan->selectSingleQuery("SELECT surveytype_id FROM surveys WHERE survey_id = "+survey_id,"surveytype_id",surveytype_id );
 
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            EvaluateSurvey(survey_id.toInt(), surveytype_id[0].toInt());
+            evaluateSurvey(survey_id.toInt(), surveytype_id[0].toInt());
         break;
 
         case 1:
@@ -121,16 +121,16 @@ void DbWindow::on_ActionButton_clicked(){
             int ret = msgBox.exec();
 
             if (ret == QMessageBox::Cancel){return;}
-            if (ret == QMessageBox::Ok){DeleteSurvey(survey_id);}
+            if (ret == QMessageBox::Ok){deleteSurvey(survey_id);}
             break;
     }
 
 
 }
 
-void DbWindow::DeleteSurvey(QString survey_id){
+void DbWindow::deleteSurvey(QString survey_id){
 
-    db_man->delete_query("DELETE FROM surveys WHERE survey_id="+ survey_id);
+    dbMan->deleteQuery("DELETE FROM surveys WHERE survey_id="+ survey_id);
 
 }
 
@@ -143,39 +143,39 @@ void DbWindow::on_FindPathButton_clicked(bool path_is_set=0){
     }
 
     // OPEN DATA INPUT WINDOW
-    NewPopup = new DataInputPopup(0,db_man);
-    connect (NewPopup, SIGNAL(ok_clicked()),this, SLOT(SaveToDatabase()));
-    NewPopup->show();
+    newPopup = new DataInputPopup(0,dbMan);
+    connect (newPopup, SIGNAL(ok_clicked()),this, SLOT(saveToDatabase()));
+    newPopup->show();
 
     // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
 
 
 }
 
-void DbWindow::SaveToDatabase(){
+void DbWindow::saveToDatabase(){
 
-    f_man = new FileManager(file.path(),NewPopup->GetSurveyType(),db_man);
+    fMan = new FileManager(file.path(),newPopup->getSurveyType(),dbMan);
 
-    if(f_man->IsReady()){
+    if(fMan->isReady()){
 
-        f_man->QuestionsToDb(NewPopup->GetLocation(),NewPopup->GetDate());
-        NewPopup->close();
-        ReadDatabase();
+        fMan->questionsToDb(newPopup->getLocation(),newPopup->getDate());
+        newPopup->close();
+        readDatabase();
     }
 
     else {
-        NewPopup->close();
+        newPopup->close();
         on_FindPathButton_clicked(true);
 
     }
-    delete f_man;
+    delete fMan;
 
 }
 
-void DbWindow::EvaluateSurvey(int survey_id, int surveytype_id){
-    f_man=new FileManager(survey_id,surveytype_id,db_man);
+void DbWindow::evaluateSurvey(int survey_id, int surveytype_id){
+    fMan=new FileManager(survey_id,surveytype_id,dbMan);
 
-    NewCalcWindow = new CalcWindow(0, db_man,f_man);
-    NewCalcWindow->show();
+    newCalcWindow = new CalcWindow(0, dbMan,fMan);
+    newCalcWindow->show();
 }
 

@@ -2,14 +2,14 @@
 
 DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
 {
-    m_db = QSqlDatabase::addDatabase("QPSQL");
-        m_db.setHostName("localhost");
-        m_db.setDatabaseName("postgres");
-        m_db.setUserName("postgres");
-        m_db.setPassword("database");
-        m_db.setPort(5432);
+    mDb = QSqlDatabase::addDatabase("QPSQL");
+        mDb.setHostName("localhost");
+        mDb.setDatabaseName("postgres");
+        mDb.setUserName("postgres");
+        mDb.setPassword("database");
+        mDb.setPort(5432);
 
-    if (!m_db.open()){
+    if (!mDb.open()){
         cout << "Error: connection with database failed" << endl;
     }
     else{
@@ -20,13 +20,13 @@ DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
 }
 
 
-bool DbManager::select_query(QString sql_query,vector <QString> &column_names,vector < vector <QString> > &output){
+bool DbManager::selectQuery(QString sqlQuery, vector <QString> &columnNames, vector < vector <QString> > &output){
     // can output one column
 
     bool success = false;
     QSqlQuery query;
 
-    query.prepare(sql_query);
+    query.prepare(sqlQuery);
 
     success = query.exec();
     cout << query.executedQuery().toStdString() << endl;
@@ -37,8 +37,8 @@ bool DbManager::select_query(QString sql_query,vector <QString> &column_names,ve
 
     vector <int> ids;
     vector <QString> table_column;
-    for (int i=0; i<column_names.size();++i){
-         ids.push_back(query.record().indexOf(column_names[i]));
+    for (int i=0; i<columnNames.size();++i){
+         ids.push_back(query.record().indexOf(columnNames[i]));
     }
 
     int ids_size=ids.size();
@@ -53,7 +53,7 @@ bool DbManager::select_query(QString sql_query,vector <QString> &column_names,ve
 return success;
 }
 
-bool DbManager::select_single_query(QString sql_query,QString column_name,vector <QString>  &output){
+bool DbManager::selectSingleQuery(QString sql_query, QString columnName, vector <QString>  &output){
     // can output one column
 
     bool success = false;
@@ -67,7 +67,7 @@ bool DbManager::select_single_query(QString sql_query,QString column_name,vector
         cout << "select_single_query error: " << query.lastError().text().toStdString() << endl;
     }
 
-    int  id_column=query.record().indexOf(column_name);
+    int  id_column=query.record().indexOf(columnName);
 
 
     while (query.next()){
@@ -77,13 +77,13 @@ bool DbManager::select_single_query(QString sql_query,QString column_name,vector
 return success;
 }
 
-bool DbManager::select_single_query(QString sql_query,QString column_name,vector <int>  &output){
+bool DbManager::selectSingleQuery(QString sqlQuery, QString columnName, vector <int>  &output){
     // can output one column
 
     bool success = false;
     QSqlQuery query;
 
-    query.prepare(sql_query);
+    query.prepare(sqlQuery);
 
     success = query.exec();
 
@@ -91,21 +91,21 @@ bool DbManager::select_single_query(QString sql_query,QString column_name,vector
         cout << "select_single_query error: " << query.lastError().text().toStdString() << endl;
     }
 
-    int  id_column=query.record().indexOf(column_name);
+    int  idColumn=query.record().indexOf(columnName);
 
 
     while (query.next()){
-        output.push_back(query.value(id_column).toInt());
+        output.push_back(query.value(idColumn).toInt());
     }
 
 return success;
 }
 
-bool DbManager::insert_query(QString sql_query){
+bool DbManager::insertQuery(QString sqlQuery){
     bool success=false;
     QSqlQuery query;
 
-    query.prepare(sql_query);
+    query.prepare(sqlQuery);
 
     success = query.exec();
     cout << query.executedQuery().toStdString() << endl;
@@ -116,11 +116,11 @@ bool DbManager::insert_query(QString sql_query){
 
     return success;
 }
-bool DbManager::insert_query(QString sql_query, QString id_name, int &id_of_insert){
+bool DbManager::insertQuery(QString sqlQuery, QString idName, int &idOfInsert){
     bool success=false;
     QSqlQuery query;
 
-    query.prepare(sql_query);
+    query.prepare(sqlQuery);
 
     success = query.exec();
     cout << query.executedQuery().toStdString() << endl;
@@ -129,14 +129,14 @@ bool DbManager::insert_query(QString sql_query, QString id_name, int &id_of_inse
         cout << "insert query error:" << query.lastError().text().toStdString()<< endl;
 
     while (query.next()){
-        id_of_insert=query.value(id_name).toInt();
+        idOfInsert=query.value(idName).toInt();
     }
 
 
     return success;
 }
 
-bool DbManager::count_lines(QString table, int &result){
+bool DbManager::countLines(QString table, int &result){
     bool success = false;
     QSqlQuery query;
 
@@ -148,21 +148,21 @@ bool DbManager::count_lines(QString table, int &result){
         cout << "count_query error: " << query.lastError().text().toStdString() << endl;
     }
 
-    int  id_column=query.record().indexOf("count");
+    int  idColumn=query.record().indexOf("count");
 
 
     while (query.next()){
-        result=query.value(id_column).toInt();
+        result=query.value(idColumn).toInt();
     }
 
 return success;
 }
 
-bool DbManager::delete_query(QString sql_query){
+bool DbManager::deleteQuery(QString sqlQuery){
     bool success = false;
     QSqlQuery query;
 
-    query.prepare(sql_query);
+    query.prepare(sqlQuery);
 
     success = query.exec();
     cout << query.executedQuery().toStdString() << endl;
@@ -172,6 +172,6 @@ bool DbManager::delete_query(QString sql_query){
     }
 
 
-    database_changed();
+    databaseChanged();
     return success;
 }

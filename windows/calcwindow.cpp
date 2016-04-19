@@ -3,7 +3,7 @@
 #include "ui_CalcWindow.h"
 #include <QFileDialog>
 #include <QInputDialog>
-#include <classes/questiondata.h>
+#include <classes/question.h>
 #include <fstream>
 #include <windows/dbwindow.h>
 #include <QCloseEvent>
@@ -13,15 +13,15 @@ using namespace std;
 CalcWindow::CalcWindow(QWidget *parent, DbManager *db_manager, FileManager *file_manager) :
     QWidget(parent),
     ui(new Ui::CalcWindow),
-    db_man(db_manager),
-    f_man(file_manager)
+    dbMan(db_manager),
+    fMan(file_manager)
 {
     ui->setupUi(this);
 
 
     ui->ShowWindow->setReadOnly(true);
-    questions=f_man->get_questions();
-    DisplayStatistics();
+    questions=fMan->getQuestions();
+    displayStatistics();
 
 
 }
@@ -43,19 +43,19 @@ void CalcWindow::on_WriteFile_Button_clicked(){
 
     QString text = ui->ShowWindow->toPlainText();
 
-    vector <QString> survey_facts=f_man->ReadSurveyFacts();
+    vector <QString> survey_facts=fMan->getSurveyFacts();
     QString filename="Feedback_Auswertung_"+ survey_facts[0]+ "_" + survey_facts[1]+".txt";
 
     QString filepath=directory[0].path();
     filepath=filepath+"/"+filename;
 
-    f_man->QuestionsToTextFile(filepath,text);
+    fMan->questionsToTextFile(filepath,text);
 
 }
 
-void CalcWindow::DisplayStatistics(){
+void CalcWindow::displayStatistics(){
 
-   vector <QString> survey_facts = f_man->ReadSurveyFacts();
+   vector <QString> survey_facts = fMan->getSurveyFacts();
 
     QString header = "<b>Feedback Auswertung des "+survey_facts[0]+"s in "+survey_facts[1] + " am " + survey_facts[2] +"</b>";
 
@@ -69,7 +69,7 @@ void CalcWindow::DisplayStatistics(){
     ui->ShowWindow->append("");
 
     ui->ShowWindow->append("<b>Teilnehmende insgesamt:</b>");
-    int size = questions[0].read_data().size();
+    int size = questions[0].getData().size();
     ui->ShowWindow->append(QString::number(size));
     ui->ShowWindow->append("");
 
@@ -77,30 +77,30 @@ void CalcWindow::DisplayStatistics(){
 
     for (int i=0; i<questions.size();++i){
      // display statistical results, if question type is not unknown and is not a text question.
-        if(questions[i].read_question_type()!=0 && questions[i].read_question_type()!=6  ){
+        if(questions[i].getQuestionType()!=0 && questions[i].getQuestionType()!=6  ){
 
-            QString MainQuestion="<b>"+questions[i].read_question()+"</b>";
-            QString SubQuestion=questions[i].read_subquestion();
+            QString mainQuestion="<b>"+questions[i].getQuestion()+"</b>";
+            QString subQuestion=questions[i].getSubQuestion();
 
-            if(questions[i].read_question()!="")
-            ui->ShowWindow->append(MainQuestion);
+            if(questions[i].getQuestion()!="")
+            ui->ShowWindow->append(mainQuestion);
 
-            if(questions[i].read_subquestion()!="")
-                ui->ShowWindow->append(SubQuestion);
+            if(questions[i].getSubQuestion()!="")
+                ui->ShowWindow->append(subQuestion);
 
-            ui->ShowWindow->append(questions[i].read_stat_val_string());
+            ui->ShowWindow->append(questions[i].getStatValString());
             ui->ShowWindow->append("");
         }
     }
 
     for (int i=0; i<questions.size();++i){
-        if(questions[i].read_question_type()==6  ){
-            QString MainQuestion="<b>"+questions[i].read_question()+"</b>";
+        if(questions[i].getQuestionType()==6  ){
+            QString mainQuestion="<b>"+questions[i].getQuestion()+"</b>";
 
-            if(questions[i].read_question()!="")
-            ui->ShowWindow->append(MainQuestion);
+            if(questions[i].getQuestion()!="")
+            ui->ShowWindow->append(mainQuestion);
             ui->ShowWindow->append("");
-            ui->ShowWindow->append(questions[i].read_stat_val_string());
+            ui->ShowWindow->append(questions[i].getStatValString());
 
         }
     }
@@ -112,7 +112,7 @@ ui->ShowWindow->moveCursor(QTextCursor::Start);
 
 void CalcWindow::closeEvent (QCloseEvent *event)
 {
-        delete f_man;
+        delete fMan;
     cout <<"wahahaha HAHA haha HAHAAHAH" << endl;
         event->accept();
     }

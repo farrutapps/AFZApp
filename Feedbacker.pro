@@ -16,23 +16,23 @@ TEMPLATE = app
 SOURCES += main.cpp\
     classes/dbmanager.cpp \
     classes/filemanager.cpp \
-    classes/questiondata.cpp \
     windows/dbwindow.cpp \
     windows/flexiblesurvey.cpp \
     windows/mainwindow.cpp \
     windows/calcwindow.cpp \
     windows/datainputpopup.cpp \
-    windows/preferenceswindow.cpp
+    windows/preferenceswindow.cpp \
+    classes/question.cpp
 
 HEADERS  += classes/dbmanager.h \
     classes/filemanager.h \
-    classes/questiondata.h \
     windows/dbwindow.h \
     windows/flexiblesurvey.h \
     windows/mainwindow.h \
     windows/calcwindow.h \
     windows/datainputpopup.h \
-    windows/preferenceswindow.h
+    windows/preferenceswindow.h \
+    classes/question.h
 
 FORMS    += windows/mainwindow.ui \
    windows/flexiblesurvey.ui \
