@@ -1,8 +1,8 @@
-#include "windows/dbwindow.h"
-#include "windows/datainputpopup.h"
+#include "view/dbwindow.h"
+#include "view/datainputpopup.h"
 
 #include "ui_dbwindow.h"
-#include "classes/filemanager.h"
+#include "model/filemanager.h"
 #include "QFileDialog"
 
 DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
@@ -156,7 +156,7 @@ void DbWindow::saveToDatabase(){
 
     fMan = new FileManager(file.path(),newPopup->getSurveyType(),dbMan);
 
-    if(fMan->isReady()){
+    if(fMan->getIsReady()){
 
         fMan->questionsToDb(newPopup->getLocation(),newPopup->getDate());
         newPopup->close();

@@ -1,8 +1,9 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include "classes/question.h"
-#include "classes/dbmanager.h"
+#include "model/question.h"
+#include "model/dbmanager.h"
+#include "model/survey.h"
 
 #include <QWidget>
 #include <iostream>
@@ -11,7 +12,7 @@
 
 #include <fstream>
 #include <cassert>
-#include <vector>
+
 
 
 
@@ -21,8 +22,8 @@ class FileManager
 {
 public:
     FileManager();
-    FileManager(QString path, int stype_id, DbManager *database_man);
-    FileManager(int survey_id, int stype_id, DbManager *database_man);
+    FileManager(QString path, int stypeId, DbManager *databaseMan);
+    FileManager(int surveyId, int stypeId, DbManager *databaseMan);
 
     bool csvToDatamatrix();
     bool datamatrixToQuestions();
@@ -31,7 +32,6 @@ public:
 
 
     void questionsToDb(QString location, QString date);
-
     void questionsToTextFile(QString filePath, QString text);
     void dbToQuestions(int surveyId);
 

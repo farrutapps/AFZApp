@@ -1,7 +1,7 @@
-#include "classes/filemanager.h"
-#include "classes/question.h"
-#include "classes/dbmanager.h"
-#include "windows/dbwindow.h"
+#include "model/filemanager.h"
+#include "model/question.h"
+#include "model/dbmanager.h"
+#include "view/dbwindow.h"
 
 /**
  * TODO:
@@ -12,16 +12,16 @@
 
 FileManager::FileManager(){isReady=false;}
 
-FileManager::FileManager(int survey_id,int stype_id, DbManager *database_man) : dbMan(database_man), surveyTypeId(stype_id)
+FileManager::FileManager(int surveyId, int stype_id, DbManager *databaseMan) : dbMan(databaseMan), surveyTypeId(stype_id)
 {
     isReady=false;
     getSurveytypes(true);
-    dbToQuestions(survey_id);
+    dbToQuestions(surveyId);
     isReady=true;
 
 }
 
-FileManager::FileManager(QString path, int stype_id, DbManager *database_man) : filePath(path), surveyTypeId(stype_id), dbMan(database_man)
+FileManager::FileManager(QString path, int stypeId, DbManager *databaseMan) : filePath(path), surveyTypeId(stypeId), dbMan(databaseMan)
 {
 isReady=false;
 getSurveytypes();
@@ -59,7 +59,7 @@ bool FileManager::csvToDatamatrix(){
 
     vector <string> dataset;
 
-    string delimiter = "\r\n";      // \r for mac. \r\n for windows csv
+    string delimiter = "\r\n";      // \r for mac. \r\n for view csv
     string token1;
     string token2;
 
@@ -317,7 +317,7 @@ vector<QString> FileManager::getSurveyFacts(){
 }
 
 
-bool FileManager::isReady(){
+bool FileManager::getIsReady(){
     return isReady;
 }
 

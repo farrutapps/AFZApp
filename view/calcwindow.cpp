@@ -3,9 +3,9 @@
 #include "ui_CalcWindow.h"
 #include <QFileDialog>
 #include <QInputDialog>
-#include <classes/question.h>
+#include <model/question.h>
 #include <fstream>
-#include <windows/dbwindow.h>
+#include <view/dbwindow.h>
 #include <QCloseEvent>
 
 using namespace std;

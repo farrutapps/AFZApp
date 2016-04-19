@@ -4,11 +4,11 @@
 #include <QWidget>
 #include <QMessageBox>
 #include <QUrl>
-#include "classes/dbmanager.h"
-#include "classes/question.h"
-#include "classes/filemanager.h"
-#include "windows/calcwindow.h"
-#include "windows/datainputpopup.h"
+#include "model/dbmanager.h"
+#include "model/question.h"
+#include "model/filemanager.h"
+#include "view/calcwindow.h"
+#include "view/datainputpopup.h"
 
 namespace Ui {
 class DbWindow;

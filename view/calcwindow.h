@@ -7,9 +7,9 @@ using namespace std;
 #include <fstream>
 #include <cassert>
 
-#include "classes/question.h"
-#include "classes/filemanager.h"
-# include "classes/dbmanager.h"
+#include "model/question.h"
+#include "model/filemanager.h"
+# include "model/dbmanager.h"
 
 namespace Ui {
 class CalcWindow;

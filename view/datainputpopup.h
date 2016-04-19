@@ -2,7 +2,7 @@
 #define DataInputPopup_H
 
 #include <QWidget>
-#include "classes/dbmanager.h"
+#include "model/dbmanager.h"
 #include "QCalendarWidget"
 
 namespace Ui {

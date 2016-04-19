@@ -14,29 +14,32 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    classes/dbmanager.cpp \
-    classes/filemanager.cpp \
-    windows/dbwindow.cpp \
-    windows/flexiblesurvey.cpp \
-    windows/mainwindow.cpp \
-    windows/calcwindow.cpp \
-    windows/datainputpopup.cpp \
-    windows/preferenceswindow.cpp \
-    classes/question.cpp
+    model/dbmanager.cpp \
+    model/filemanager.cpp \
+    view/dbwindow.cpp \
+    view/flexiblesurvey.cpp \
+    view/mainwindow.cpp \
+    view/calcwindow.cpp \
+    view/datainputpopup.cpp \
+    view/preferenceswindow.cpp \
+    model/question.cpp \
+    model/survey.cpp
 
-HEADERS  += classes/dbmanager.h \
-    classes/filemanager.h \
-    windows/dbwindow.h \
-    windows/flexiblesurvey.h \
-    windows/mainwindow.h \
-    windows/calcwindow.h \
-    windows/datainputpopup.h \
-    windows/preferenceswindow.h \
-    classes/question.h
+HEADERS  += model/dbmanager.h \
+    model/filemanager.h \
+    view/dbwindow.h \
+    view/flexiblesurvey.h \
+    view/mainwindow.h \
+    view/calcwindow.h \
+    view/datainputpopup.h \
+    view/preferenceswindow.h \
+    model/question.h \
+    model/survey.h \
+    model/constants.h
 
-FORMS    += windows/mainwindow.ui \
-   windows/flexiblesurvey.ui \
-    windows/dbwindow.ui \
-    windows/calcwindow.ui \
-    windows/datainputpopup.ui \
-    windows/preferenceswindow.ui
+FORMS    += view/mainwindow.ui \
+   view/flexiblesurvey.ui \
+    view/dbwindow.ui \
+    view/calcwindow.ui \
+    view/datainputpopup.ui \
+    view/preferenceswindow.ui
