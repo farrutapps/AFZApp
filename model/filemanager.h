@@ -9,7 +9,8 @@
 #include <iostream>
 #include <vector>
 
-
+#include "model/survey.h"
+#include "model/import.h"
 #include <fstream>
 #include <cassert>
 
@@ -22,38 +23,44 @@ class FileManager
 {
 public:
     FileManager();
-    FileManager(QString path, int stypeId, DbManager *databaseMan);
-    FileManager(int surveyId, int stypeId, DbManager *databaseMan);
-
-    bool csvToDatamatrix();
-    bool datamatrixToQuestions();
-    void getSurveytypes(bool cutUseless=false);
+    
 
 
 
-    void questionsToDb(QString location, QString date);
-    void questionsToTextFile(QString filePath, QString text);
-    void dbToQuestions(int surveyId);
 
-    vector <Question> getQuestions();
-    vector <QString> getSurveyFacts();
+    static void questionsToTextFile(QString filePath, QString text);
+    static void fillSurveyFromDb(Survey &survey);
 
-    bool getIsReady();
+    static void getQuestionTypesFromDb(vector<QString> &questionTypes,  int surveyTypeId, bool cutUseless);
+
+    static vector <Question> getQuestions();
+
+    static vector<QString> getSurveyFacts(vector <QString> &surveyFacts, int surveyId );
+
+
+
+    static bool surveysFromDbToModel(int &numberOfSurveys);
+
+    static bool newCalculation(int surveyId);
+
+
+
+    static Survey *getCurrentSurvey();
 
 private:
-    QString filePath;
-    int surveyTypeId;
-    DbManager *dbMan;
-    vector <vector <QString> > questionTypes;
+    static QString filePath;
+    
+    static DbManager *dbMan;
 
-    vector <QString> surveyFacts;
-    vector <vector <string> > dataMatrix;
-    vector <Question> questions;
-    bool isReady;
+
+    static vector <Survey> surveys;
+    static Survey *currentSurvey;
 
 signals:
 
 public slots:
+    static void importButtonClicked(bool path_is_set = 0);
+    static bool newImport(QString location, QString date, int surveyTypeId, QString filePath);
 };
 
 #endif // FILEMANAGER_H

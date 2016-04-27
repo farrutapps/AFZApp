@@ -30,6 +30,7 @@ public:
     QString getQuestion();
     QString getSubQuestion();
     int getQuestionType();
+    
     vector <int> getData();
     QString getStatValString();
     double getStatVal();

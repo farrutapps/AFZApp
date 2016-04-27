@@ -4,6 +4,7 @@
 #include "ui_dbwindow.h"
 #include "model/filemanager.h"
 #include "QFileDialog"
+#include "model/import.h"
 
 DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
     QWidget(parent),
@@ -11,10 +12,12 @@ DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
 {
     ui->setupUi(this);
     setupTable();
+    updateTableContent();
+    
     setupCombo();
-    readDatabase();
+    
 
-    connect (dbMan,SIGNAL(databaseChanged()),this,SLOT(readDatabase()));
+    connect (dbMan,SIGNAL(databaseChanged()),this,SLOT(updateTableContent()));
     connect (ui->DbTable, SIGNAL(cellDoubleClicked(int,int)),this,SLOT(on_ActionButton_clicked()));
 
 }
@@ -34,66 +37,52 @@ void DbWindow::setupTable(){
 
 }
 
-void DbWindow::readDatabase(){
+//SUBSTITUTET
+void DbWindow::updateTableContent(){
+
+
     //setheaders
     ui->DbTable->clear();
     QStringList TableHeaders;
     TableHeaders.append("Seminar");
     TableHeaders.append("Ort");
     TableHeaders.append("Datum [J M T]");
-    TableHeaders.append("Feedbacks");
+    TableHeaders.append("Anzahl TN");
 
 
     ui->DbTable->setHorizontalHeaderLabels(TableHeaders);
-    ui->DbTable->horizontalHeader()->setStretchLastSection(false);
+    ui->DbTable->horizontalHeader()->setStretchLastSection(false); 
 
+    int numberOfSurveys;
+    if (fMan->surveysFromDbToModel(numberOfSurveys)){
 
-    vector <vector <QString> > surveydata;
-    vector <QString> column_names;
-
-    column_names.push_back("surveytype_name");
-    column_names.push_back("survey_name");
-    column_names.push_back("survey_date");
-    column_names.push_back("survey_datasize");
-    column_names.push_back("survey_id");
-
-    dbMan->selectQuery("SELECT survey_name, survey_date, survey_datasize, survey_id, surveytype_name  "
-                         "FROM surveys INNER JOIN surveytypes "
-                         "ON surveys.surveytype_id=surveytypes.surveytype_id",column_names,surveydata);
-
-
-
-    if (!surveydata.empty()){
-        int sd_size_inner=surveydata.size();
-
-    // go through outer vectors, columns
-        for (int i=0; i<surveydata.size()-1;++i){
+        vector<QString> surveyFacts;
 
             //go through inner vector, rows
-            for (int j=0; j<surveydata[0].size();++j){
+            for (int j=0; j<numberOfSurveys;++j){
 
+                surveyFacts.clear();
+                fMan->getSurveyFacts(surveyFacts,j);
 
-
-                QTableWidgetItem *newItem = new QTableWidgetItem(surveydata[i][j]);
+                // -1 in order to write surveyID behind first cell
+                for(int i=0; i<surveyFacts.size()-1; ++i){
+                QTableWidgetItem *newItem = new QTableWidgetItem(surveyFacts[i]);
 
                 //write survey_id behind the first cell
                 if (i==0)
-                   newItem->setData(Qt::UserRole,surveydata[sd_size_inner-1][j]);
+                   newItem->setData(Qt::UserRole,surveyFacts.back());
 
                 ui->DbTable->setItem(j, i, newItem);
-            }
-        }
+                }
+
 
     ui->DbTable->sortByColumn(2);
+            }
+
+
     }
-
-
-    else {
-        cout << "Error reading database. Maybe empty." <<endl;
-    }
-
 }
-    
+
 void DbWindow::setupCombo(){
 
     ui->ActionCombo->addItem("Umfrage Auswerten");
@@ -102,14 +91,14 @@ void DbWindow::setupCombo(){
 
 void DbWindow::on_ActionButton_clicked(){
 
-    QString survey_id = ui->DbTable->selectedItems().at(0)->data(Qt::UserRole).toString();
-    vector<QString> surveytype_id;
-    dbMan->selectSingleQuery("SELECT surveytype_id FROM surveys WHERE survey_id = "+survey_id,"surveytype_id",surveytype_id );
+    int surveyId = ui->DbTable->selectedItems().at(0)->data(Qt::UserRole).toInt();
+
 
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            evaluateSurvey(survey_id.toInt(), surveytype_id[0].toInt());
+            fMan->newCalculation(surveyId);
+        
         break;
 
         case 1:
@@ -121,7 +110,7 @@ void DbWindow::on_ActionButton_clicked(){
             int ret = msgBox.exec();
 
             if (ret == QMessageBox::Cancel){return;}
-            if (ret == QMessageBox::Ok){deleteSurvey(survey_id);}
+            if (ret == QMessageBox::Ok){deleteSurvey(QString::number(surveyId));}
             break;
     }
 
@@ -134,48 +123,36 @@ void DbWindow::deleteSurvey(QString survey_id){
 
 }
 
-void DbWindow::on_FindPathButton_clicked(bool path_is_set=0){
+void DbWindow::on_FindPathButton_clicked(bool path_is_set){
+
 
     if(!path_is_set)
     {QUrl StartDir("~/Documents");
-        file = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,tr("CSV Files (*.csv)") );
-        ui->NewSurveyPath->appendPlainText(file.path());
+         selectedFile = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,"CSV Files (*.csv)" );
+
     }
 
     // OPEN DATA INPUT WINDOW
     newPopup = new DataInputPopup(0,dbMan);
-    connect (newPopup, SIGNAL(ok_clicked()),this, SLOT(saveToDatabase()));
+    connect (newPopup, SIGNAL(ok_clicked()),this, SLOT(newImport()));
     newPopup->show();
 
     // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
-
-
 }
 
-void DbWindow::saveToDatabase(){
 
-    fMan = new FileManager(file.path(),newPopup->getSurveyType(),dbMan);
+void DbWindow::newImport(){
 
-    if(fMan->getIsReady()){
-
-        fMan->questionsToDb(newPopup->getLocation(),newPopup->getDate());
+    if (fMan->newImport(newPopup->getLocation(),newPopup->getDate(),newPopup->getSurveyType(),selectedFile.path())){
         newPopup->close();
-        readDatabase();
+        updateTableContent();
     }
 
     else {
         newPopup->close();
         on_FindPathButton_clicked(true);
-
     }
-    delete fMan;
-
 }
 
-void DbWindow::evaluateSurvey(int survey_id, int surveytype_id){
-    fMan=new FileManager(survey_id,surveytype_id,dbMan);
 
-    newCalcWindow = new CalcWindow(0, dbMan,fMan);
-    newCalcWindow->show();
-}
 

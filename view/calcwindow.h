@@ -8,8 +8,9 @@ using namespace std;
 #include <cassert>
 
 #include "model/question.h"
-#include "model/filemanager.h"
+#include "model/survey.h"
 # include "model/dbmanager.h"
+#include "model/filemanager.h"
 
 namespace Ui {
 class CalcWindow;
@@ -20,25 +21,29 @@ class CalcWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit CalcWindow(QWidget *parent = 0, DbManager *db_manager=0, FileManager *fMan=0);
+    explicit CalcWindow(QWidget *parent = 0, int surveyIdIn=0);
     ~CalcWindow();
 
 
 
-
+    void appendText(QString text);
     void displayStatistics();
-    void closeEvent (QCloseEvent *event);
+
+    void newCalculation();
+
+    void showEvent(QShowEvent *);
 public slots:
     void on_WriteFile_Button_clicked();
 
 
 private:
     Ui::CalcWindow *ui;
-
+    int surveyId;
     QUrl file;
-    vector <Question> questions;
+    vector <Question> * questions;
+    Survey *survey;
 
-    DbManager *dbMan;
+
     FileManager *fMan;
 
 };

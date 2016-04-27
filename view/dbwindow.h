@@ -27,14 +27,15 @@ public:
     void deleteSurvey(QString survey_id);
     void evaluateSurvey(int survey_id, int surveytype_id);
 
+
 signals:
 
 
 public slots:
     void on_ActionButton_clicked();
-    void readDatabase();
+    void updateTableContent();
     void on_FindPathButton_clicked(bool path_is_set);
-    void saveToDatabase();
+    void newImport();
 
 
 private:
@@ -42,7 +43,7 @@ private:
     DbManager *dbMan;
     FileManager *fMan;
     DataInputPopup *newPopup;
-    QUrl file;
+    QUrl selectedFile;
     CalcWindow *newCalcWindow;
 //    FileManager *f_man;
 //    vector <questiondata> questions;

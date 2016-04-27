@@ -1,14 +1,15 @@
 #include "survey.h"
 
-Survey::Survey(int databaseId, int sTypeId, int sLocation, int sDate) : dbId(databaseId), surveyTypeId(sTypeId), location(sLocation), date(sDate)
+Survey::Survey(){
+
+}
+
+Survey::Survey(int databaseId, int sTypeId, int sLocation, int sDate) : dbId(databaseId), surveyTypeName(sTypeId), location(sLocation), date(sDate)
 {
 
 }
 
-int Survey::getQuestionsSize() const
-{
-    return questions.size();
-}
+
 
 QString Survey::getLocation() const
 {
@@ -40,6 +41,16 @@ void Survey::setDbId(int value)
     dbId = value;
 }
 
+QString Survey::getSurveyTypeName() const
+{
+    return surveyTypeName;
+}
+
+void Survey::setSurveyTypeName(const QString &value)
+{
+    surveyTypeName = value;
+}
+
 int Survey::getSurveyTypeId() const
 {
     return surveyTypeId;
@@ -48,5 +59,37 @@ int Survey::getSurveyTypeId() const
 void Survey::setSurveyTypeId(int value)
 {
     surveyTypeId = value;
+}
+
+bool Survey::getIsFilled() const
+{
+    return isFilled;
+}
+
+void Survey::setIsFilled(bool value)
+{
+    isFilled = value;
+}
+
+int Survey::getQuestionDataSize() const
+{
+    return questionDataSize;
+}
+
+void Survey::setQuestionDataSize(int value)
+{
+    questionDataSize = value;
+}
+
+vector<Question> Survey::getQuestions() const
+{
+    return questions;
+}
+
+
+void Survey::pushBackQuestions(const Question &value)
+{
+    questions.push_back(value);
+    isFilled=true;
 }
 

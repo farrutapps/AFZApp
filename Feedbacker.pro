@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     view/datainputpopup.cpp \
     view/preferenceswindow.cpp \
     model/question.cpp \
-    model/survey.cpp
+    model/survey.cpp \
+    model/import.cpp
 
 HEADERS  += model/dbmanager.h \
     model/filemanager.h \
@@ -35,7 +36,8 @@ HEADERS  += model/dbmanager.h \
     view/preferenceswindow.h \
     model/question.h \
     model/survey.h \
-    model/constants.h
+    model/constants.h \
+    model/import.h
 
 FORMS    += view/mainwindow.ui \
    view/flexiblesurvey.ui \
