@@ -6,8 +6,9 @@
 #include <QUrl>
 #include "model/dbmanager.h"
 #include "model/question.h"
-#include "model/filemanager.h"
+#include "controller/controller.h"
 #include "view/calcwindow.h"
+
 #include "view/datainputpopup.h"
 
 namespace Ui {
@@ -24,8 +25,10 @@ public:
 
     void setupTable();
     void setupCombo();
-    void deleteSurvey(QString survey_id);
+    void deleteSurvey(QString surveyId);
     void evaluateSurvey(int survey_id, int surveytype_id);
+
+
 
 
 signals:
@@ -34,13 +37,14 @@ signals:
 public slots:
     void on_ActionButton_clicked();
     void updateTableContent();
-    void on_FindPathButton_clicked();
-    void newImport();
+    void on_FindPathButton_clicked(bool path_is_set);
+    void saveToDatabase();
+
 
 
 private:
     Ui::DbWindow *ui;
-    DbManager *dbMan;
+
 
     DataInputPopup *newPopup;
     QUrl selectedFile;

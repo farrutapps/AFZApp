@@ -10,7 +10,7 @@ using namespace std;
 #include "model/question.h"
 #include "model/survey.h"
 # include "model/dbmanager.h"
-#include "model/filemanager.h"
+#include "controller/controller.h"
 
 namespace Ui {
 class CalcWindow;
@@ -44,7 +44,7 @@ private:
     Survey *survey;
 
 
-    FileManager *fMan;
+    Controller *fMan;
 
 };
 

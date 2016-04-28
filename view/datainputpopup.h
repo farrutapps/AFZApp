@@ -4,7 +4,9 @@
 #include <QWidget>
 #include "model/dbmanager.h"
 #include "QCalendarWidget"
-#include "model/filemanager.h"
+#include <controller/controller.h>
+
+
 
 namespace Ui {
 class DataInputPopup;

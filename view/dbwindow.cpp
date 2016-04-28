@@ -2,9 +2,9 @@
 #include "view/datainputpopup.h"
 
 #include "ui_dbwindow.h"
-#include "model/filemanager.h"
+#include "controller/controller.h"
 #include "QFileDialog"
-#include "model/import.h"
+
 
 DbWindow::DbWindow(QWidget *parent) :
     QWidget(parent),
@@ -54,23 +54,24 @@ void DbWindow::updateTableContent(){
     ui->DbTable->horizontalHeader()->setStretchLastSection(false); 
 
     int numberOfSurveys;
-    if (FileManager::surveysFromDbToModel(numberOfSurveys)){
+    if (Controller::surveysFromDbToModel(numberOfSurveys)){
 
-        vector<QString> surveyFacts;
+        vector < vector<QString> >surveyFacts;
 
             //go through inner vector, rows
-            for (int j=0; j<numberOfSurveys;++j){
 
-                surveyFacts.clear();
-                FileManager::getSurveyFacts(surveyFacts,j);
+
+
+                Controller::getSurveyFacts(surveyFacts);
 
                 // -1 in order to write surveyID behind first cell
-                for(int i=0; i<surveyFacts.size()-1; ++i){
-                QTableWidgetItem *newItem = new QTableWidgetItem(surveyFacts[i]);
+                for (int j=0; j<numberOfSurveys;++j){
+                for(int i=0; i<surveyFacts[j].size()-1; ++i){
+                QTableWidgetItem *newItem = new QTableWidgetItem(surveyFacts[j][i]);
 
                 //write survey_id behind the first cell
                 if (i==0)
-                   newItem->setData(Qt::UserRole,surveyFacts.back());
+                   newItem->setData(Qt::UserRole,surveyFacts[j][surveyFacts[j].size()-1]);
 
                 ui->DbTable->setItem(j, i, newItem);
                 }
@@ -97,7 +98,7 @@ void DbWindow::on_ActionButton_clicked(){
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            FileManager::newCalculation(surveyId);
+            Controller::newCalculation(surveyId);
         
         break;
 
@@ -117,16 +118,50 @@ void DbWindow::on_ActionButton_clicked(){
 
 }
 
-void DbWindow::deleteSurvey(QString survey_id){
+void DbWindow::deleteSurvey(QString surveyId){
 
-    dbMan->deleteQuery("DELETE FROM surveys WHERE survey_id="+ survey_id);
-
-}
-
-void DbWindow::on_FindPathButton_clicked(){
-    FileManager::ImportFile(false);
+    Controller::deleteSurveyFromDb(surveyId);
     updateTableContent();
 }
 
 
+
+
+
+void DbWindow::on_FindPathButton_clicked(bool path_is_set){
+
+    if(!path_is_set)
+    {QUrl StartDir("~/Documents");
+        selectedFile = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,tr("CSV Files (*.csv)") );
+        ui->NewSurveyPath->appendPlainText(selectedFile.path());
+    }
+
+    // OPEN DATA INPUT WINDOW
+    newPopup = new DataInputPopup(0);
+    connect (newPopup, SIGNAL(okClicked()),this, SLOT(saveToDatabase()));
+    newPopup->show();
+
+    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
+
+
+}
+
+void DbWindow::saveToDatabase(){
+
+
+    if(Controller::ImportFile(newPopup->getLocation(),newPopup->getDate(), newPopup->getSurveyType(),selectedFile.path())){
+
+
+        newPopup->close();
+        updateTableContent();
+    }
+
+    else {
+        newPopup->close();
+        on_FindPathButton_clicked(true);
+
+    }
+
+
+}
 

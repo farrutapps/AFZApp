@@ -15,7 +15,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     model/dbmanager.cpp \
-    model/filemanager.cpp \
     view/dbwindow.cpp \
     view/flexiblesurvey.cpp \
     view/mainwindow.cpp \
@@ -24,10 +23,10 @@ SOURCES += main.cpp\
     view/preferenceswindow.cpp \
     model/question.cpp \
     model/survey.cpp \
-    model/import.cpp
+    model/import.cpp \
+    controller/controller.cpp
 
 HEADERS  += model/dbmanager.h \
-    model/filemanager.h \
     view/dbwindow.h \
     view/flexiblesurvey.h \
     view/mainwindow.h \
@@ -37,7 +36,8 @@ HEADERS  += model/dbmanager.h \
     model/question.h \
     model/survey.h \
     model/constants.h \
-    model/import.h
+    model/import.h \
+    controller/controller.h
 
 FORMS    += view/mainwindow.ui \
    view/flexiblesurvey.ui \

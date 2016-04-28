@@ -9,7 +9,7 @@ Import::Import(DbManager *databaseMan, QString location, QString date, int surve
     success = false;
     if(csvToDatamatrix(filePath))
         if(datamatrixToQuestions())
-            if(questionsToDb(location,date, surveyTypeId));
+            if(questionsToDb(location,date, surveyTypeId))
                 success=true;
 }
 

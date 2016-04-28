@@ -1,6 +1,6 @@
 #include "model/dbmanager.h"
 
-DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
+DbManager::DbManager(const QString& path)
 {
     mDb = QSqlDatabase::addDatabase("QPSQL");
         mDb.setHostName("localhost");
@@ -22,14 +22,14 @@ DbManager::DbManager(const QString& path, QWidget *parent) : QWidget(parent)
 
 bool DbManager::selectQuery(QString sqlQuery, vector <QString> &columnNames, vector < vector <QString> > &output){
     // can output one column
-    cout << "HERE I AM" << endl;
+
     bool success = false;
     QSqlQuery query;
 
     query.prepare(sqlQuery);
 
     success = query.exec();
-    cout << query.executedQuery().toStdString() << endl;
+   // cout << query.executedQuery().toStdString() << endl;
 
     if (!success){
         cout << "select query error: " << query.lastError().text().toStdString() << endl;
@@ -47,7 +47,7 @@ bool DbManager::selectQuery(QString sqlQuery, vector <QString> &columnNames, vec
     while (query.next()){
         for (int i=0; i<ids_size;++i){
             output[i].push_back(query.value(ids[i]).toString());
-            cout << query.value(ids[i]).toString().toStdString() << endl;
+
         }
     }
 
@@ -173,6 +173,6 @@ bool DbManager::deleteQuery(QString sqlQuery){
     }
 
 
-    databaseChanged();
+
     return success;
 }

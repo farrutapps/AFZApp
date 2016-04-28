@@ -11,12 +11,12 @@
 
 using namespace std;
 
-class DbManager : public QWidget
+class DbManager
 {
-    Q_OBJECT
+
 
 public:
-    explicit DbManager(const QString& path, QWidget *parent = 0);
+    DbManager(const QString& path);
 
 
     bool selectQuery(QString sqlQuery, vector <QString> &columnNames, vector < vector <QString> > &output);
@@ -33,7 +33,7 @@ private:
     QSqlDatabase mDb;
 
 signals:
-    void databaseChanged();
+
 
 public slots:
 

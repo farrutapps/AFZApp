@@ -4,30 +4,22 @@
 #include "model/question.h"
 #include "model/dbmanager.h"
 #include "model/survey.h"
+#include "model/import.h"
 
 #include <QWidget>
-#include <iostream>
-#include <vector>
 
-#include "model/survey.h"
-#include "model/import.h"
+#include <iostream>
+
+#include <vector>
 #include <fstream>
 #include <cassert>
-#include <view/datainputpopup.h>
-
-
-
 
 using namespace std;
 
-class FileManager
+class Controller
 {
 public:
-    FileManager();
-    
-
-
-
+    Controller();
 
     static void questionsToTextFile(QString filePath, QString text);
     static void fillSurveyFromDb(Survey &survey);
@@ -36,9 +28,8 @@ public:
 
     static vector <Question> getQuestions();
 
-    static vector<QString> getSurveyFacts(vector <QString> &surveyFacts, int surveyId );
-
-
+    static void getSurveyFacts(vector <QString> &surveyFacts, int surveyId );
+    static void getSurveyFacts(vector<vector<QString> > &surveyFacts);
 
     static bool surveysFromDbToModel(int &numberOfSurveys);
 
@@ -47,13 +38,15 @@ public:
     static void getSurveyTypes(vector <QString> &surveyTypes);
 
     static Survey *getCurrentSurvey();
-    static void ImportFile(bool pathIsSet=true);
 
+    static bool ImportFile(QString location, QString date, int surveyTypeId, QString filePath);
+
+    static void deleteSurveyFromDb(QString surveyId);
 private:
-    static DataInputPopup *newPopup;
+
     
     static DbManager *dbMan;
-    static QString filePath;
+
 
     static vector <Survey> surveys;
     static Survey *currentSurvey;
@@ -62,8 +55,8 @@ private:
 signals:
 
 public slots:
-    static void importButtonClicked(bool path_is_set = 0);
-    static void newImport();
+
+
 
 };
 

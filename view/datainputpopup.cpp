@@ -2,6 +2,8 @@
 #include "ui_DataInputPopup.h"
 
 
+
+
 DataInputPopup::DataInputPopup(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DataInputPopup)
@@ -26,7 +28,7 @@ DataInputPopup::~DataInputPopup()
 
 void DataInputPopup::setupCombo(){
 
-    FileManager::getSurveyTypes(surveyTypes);
+    Controller::getSurveyTypes(surveyTypes);
 
 
 

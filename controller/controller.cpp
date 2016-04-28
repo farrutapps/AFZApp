@@ -1,4 +1,4 @@
-#include "model/filemanager.h"
+#include "controller/controller.h"
 #include "model/question.h"
 #include "model/dbmanager.h"
 #include "view/dbwindow.h"
@@ -11,26 +11,26 @@
  *
  * */
 
-FileManager::FileManager()
-{
 
+
+Controller::Controller()
+{
                           
 }
 
-QString FileManager::filePath;
-DbManager *FileManager::dbMan = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 
-DataInputPopup *FileManager::newPopup = NULL;
+DbManager *Controller::dbMan = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 
-vector <Survey> FileManager::surveys;
+vector <Survey> Controller::surveys;
 
-Survey *FileManager::currentSurvey=NULL;
+Survey *Controller::currentSurvey=NULL;
 
-void FileManager::getSurveyTypes(vector <QString> &surveyTypes){
+
+void Controller::getSurveyTypes(vector <QString> &surveyTypes){
     dbMan->selectSingleQuery("SELECT surveytype_name FROM surveytypes", "surveytype_name", surveyTypes);
 }
 
-void FileManager::getQuestionTypesFromDb(vector<QString> &questionTypes,  int surveyTypeId, bool cutUseless){
+void Controller::getQuestionTypesFromDb(vector<QString> &questionTypes,  int surveyTypeId, bool cutUseless){
     cout << "START READING SURVEYTYPES FROM DB" << endl;
     
         dbMan->selectSingleQuery("SELECT qtype FROM qtypes WHERE surveytype_id = " + QString::number(surveyTypeId),"qtype",questionTypes );
@@ -46,7 +46,7 @@ void FileManager::getQuestionTypesFromDb(vector<QString> &questionTypes,  int su
 
 
 
-void FileManager::questionsToTextFile(QString filePath, QString text){
+void Controller::questionsToTextFile(QString filePath, QString text){
 
      ofstream myfile;
      myfile.open (filePath.toStdString().c_str());
@@ -54,7 +54,7 @@ void FileManager::questionsToTextFile(QString filePath, QString text){
      myfile.close();
 }
 
-void FileManager::fillSurveyFromDb(Survey &survey){
+void Controller::fillSurveyFromDb(Survey &survey){
 
     vector<QString> questionTypes;
     getQuestionTypesFromDb(questionTypes, survey.getSurveyTypeId(), true);
@@ -117,13 +117,14 @@ void FileManager::fillSurveyFromDb(Survey &survey){
 
 }
 
-vector<QString> FileManager::getSurveyFacts(vector <QString> &surveyFacts, int surveyId ){
+void Controller::getSurveyFacts(vector <QString> &surveyFacts, int surveyId ){
 
    if(!surveyFacts.empty())
    cout << "WARNING: surveyFacts is not empty!" << endl;
 
-
+ cout << "WHAPPAAAA" << endl;
     for (int i=0; i<surveys.size();++i){
+        cout << "123123123" <<endl;
         if (surveys[i].getDbId()==surveyId){
 
             surveyFacts.push_back(surveys[i].getSurveyTypeName());
@@ -132,47 +133,74 @@ vector<QString> FileManager::getSurveyFacts(vector <QString> &surveyFacts, int s
             surveyFacts.push_back(QString::number(surveys[i].getQuestionDataSize()));
             surveyFacts.push_back(QString::number(surveys[i].getDbId()));
 
+
+
         }
     }
 
-    return surveyFacts;
+
 }
 
+void Controller::getSurveyFacts(vector <vector<QString> > &surveyFacts)
+{
+
+    if(!surveyFacts.empty())
+    cout << "WARNING: surveyFacts is not empty!" << endl;
+
+    vector <QString> tempFacts;
+     for (int i=0; i<surveys.size();++i){
+
+
+             tempFacts.push_back(surveys[i].getSurveyTypeName());
+             tempFacts.push_back(surveys[i].getLocation());
+             tempFacts.push_back(surveys[i].getDate());
+             tempFacts.push_back(QString::number(surveys[i].getQuestionDataSize()));
+             tempFacts.push_back(QString::number(surveys[i].getDbId()));
+
+             surveyFacts.push_back(tempFacts);
+             tempFacts.clear();
+         }
+     }
 
 
 
-bool FileManager::surveysFromDbToModel(int &numberOfSurveys){
+
+
+
+
+bool Controller::surveysFromDbToModel(int &numberOfSurveys){
 
     bool success=false;
 
-    vector <vector <QString> > surveydata;
-    vector <QString> column_names;
+    vector <vector <QString> > surveyData;
+    vector <QString> columnNames;
 
-    column_names.push_back("surveytype_name");
-    column_names.push_back("survey_name");
-    column_names.push_back("survey_date");
-    column_names.push_back("survey_datasize");
-    column_names.push_back("survey_id");
-    column_names.push_back("surveytypes.surveytype_id");
+    columnNames.push_back("surveytype_name");
+    columnNames.push_back("survey_name");
+    columnNames.push_back("survey_date");
+    columnNames.push_back("survey_datasize");
+    columnNames.push_back("survey_id");
+    columnNames.push_back("surveytype_id");
 
-    dbMan->selectQuery("SELECT survey_name, survey_date, survey_datasize, survey_id, surveytype_name, surveytypes.surveytype_id  "
+    dbMan->selectQuery("SELECT survey_name, survey_date, survey_datasize, survey_id, surveytype_name, surveys.surveytype_id "
                          "FROM surveys INNER JOIN surveytypes "
-                         "ON surveys.surveytype_id=surveytypes.surveytype_id",column_names,surveydata);
+                         "ON surveys.surveytype_id=surveytypes.surveytype_id",columnNames,surveyData);
 
-    numberOfSurveys=surveydata[0].size();
+    numberOfSurveys=surveyData[0].size();
 
-    if (!surveydata.empty()){
+    vector <QString> surveyTypeIds;
+
+    if (!surveyData.empty()){
 
         surveys.resize(numberOfSurveys);
 
             for (int j=0; j<numberOfSurveys;++j){
-
-                surveys[j].setSurveyTypeName(surveydata[0][j]);
-                surveys[j].setLocation(surveydata[1][j]);
-                surveys[j].setDate(surveydata[2][j]);
-                surveys[j].setQuestionDataSize(surveydata[3][j].toInt());
-                surveys[j].setDbId(surveydata[4][j].toInt());
-                surveys[j].setSurveyTypeId(surveydata[5][j].toInt());
+                surveys[j].setSurveyTypeName(surveyData[0][j]);
+                surveys[j].setLocation(surveyData[1][j]);
+                surveys[j].setDate(surveyData[2][j]);
+                surveys[j].setQuestionDataSize(surveyData[3][j].toInt());
+                surveys[j].setDbId(surveyData[4][j].toInt());
+                surveys[j].setSurveyTypeId(surveyData[5][j].toInt());
 
         }
 
@@ -190,52 +218,25 @@ bool FileManager::surveysFromDbToModel(int &numberOfSurveys){
 }
 
 
-
-
-
-
-
-void FileManager::ImportFile(bool pathIsSet){
-    QUrl selectedFile;
-    if(!pathIsSet)
-    {
-         QUrl StartDir("~/Documents");
-
-         selectedFile= QFileDialog::getOpenFileUrl(0, "Bitte Datenbank auswählen", StartDir,"CSV Files (*.csv)" );
-
-    }
-
-    filePath = selectedFile.path();
-
-    // OPEN DATA INPUT WINDOW
-    newPopup = new DataInputPopup(0);
-    CalcWindow::connect (newPopup, SIGNAL(ok_clicked()),0, SLOT(newImport()));
-    newPopup->show();
-
-    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
-}
-
-
-void FileManager::newImport(){
+bool Controller::ImportFile(QString location, QString date, int surveyTypeId, QString filePath){
     bool success=false;
 
     vector <QString> questionTypes;
-    getQuestionTypesFromDb(questionTypes,newPopup->getSurveyType(), false);
+    getQuestionTypesFromDb(questionTypes,surveyTypeId, false);
 
-    Import *import = new Import(dbMan, newPopup->getLocation(), newPopup->getDate(), newPopup->getSurveyType(), questionTypes, filePath);
+
+    Import *import = new Import(dbMan, location, date, surveyTypeId, questionTypes, filePath);
     success = import-> getSuccess();
 
-    newPopup->close();
-    delete newPopup;
-    if (!success){
-        ImportFile(true);
-
-    }
+    return success;
 }
 
+void Controller::deleteSurveyFromDb(QString surveyId)
+{
+    dbMan->deleteQuery("DELETE FROM surveys WHERE survey_id="+ surveyId);
+}
 
-
-bool FileManager::newCalculation(int surveyId){
+bool Controller::newCalculation(int surveyId){
 
     bool success = false;
 
@@ -254,7 +255,7 @@ bool FileManager::newCalculation(int surveyId){
     calcWindow->show();
 }
 
-Survey *FileManager::getCurrentSurvey()
+Survey *Controller::getCurrentSurvey()
 {
     return currentSurvey;
 }
