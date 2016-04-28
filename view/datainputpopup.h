@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "model/dbmanager.h"
 #include "QCalendarWidget"
+#include "model/filemanager.h"
 
 namespace Ui {
 class DataInputPopup;
@@ -14,7 +15,7 @@ class DataInputPopup : public QWidget
     Q_OBJECT
 
 public:
-    explicit DataInputPopup(QWidget *parent = 0, DbManager *databaseManager=NULL);
+    explicit DataInputPopup(QWidget *parent = 0);
     ~DataInputPopup();
 
     void setupCombo();
@@ -37,7 +38,7 @@ private:
     Ui::DataInputPopup *ui;
     DbManager *dbMan;
 
-    vector <QString> surveytypes;
+    vector <QString> surveyTypes;
 };
 
 #endif // DataInputPopup_H

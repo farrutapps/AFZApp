@@ -19,7 +19,7 @@ class DbWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit DbWindow(QWidget *parent = 0, DbManager * dbManager= 0 );
+    explicit DbWindow(QWidget *parent = 0);
     ~DbWindow();
 
     void setupTable();
@@ -34,14 +34,14 @@ signals:
 public slots:
     void on_ActionButton_clicked();
     void updateTableContent();
-    void on_FindPathButton_clicked(bool path_is_set);
+    void on_FindPathButton_clicked();
     void newImport();
 
 
 private:
     Ui::DbWindow *ui;
     DbManager *dbMan;
-    FileManager *fMan;
+
     DataInputPopup *newPopup;
     QUrl selectedFile;
     CalcWindow *newCalcWindow;

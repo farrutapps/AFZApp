@@ -17,15 +17,18 @@ FileManager::FileManager()
                           
 }
 
-QString FileManager::filePath="";
+QString FileManager::filePath;
+DbManager *FileManager::dbMan = new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 
-DbManager *FileManager::dbMan = NULL;
+DataInputPopup *FileManager::newPopup = NULL;
 
-vector <Survey> FileManager::surveys = ;
-//vector <Survey> FileManager::surveys;
+vector <Survey> FileManager::surveys;
+
 Survey *FileManager::currentSurvey=NULL;
 
-
+void FileManager::getSurveyTypes(vector <QString> &surveyTypes){
+    dbMan->selectSingleQuery("SELECT surveytype_name FROM surveytypes", "surveytype_name", surveyTypes);
+}
 
 void FileManager::getQuestionTypesFromDb(vector<QString> &questionTypes,  int surveyTypeId, bool cutUseless){
     cout << "START READING SURVEYTYPES FROM DB" << endl;
@@ -190,19 +193,46 @@ bool FileManager::surveysFromDbToModel(int &numberOfSurveys){
 
 
 
-bool FileManager::newImport(QString location, QString date, int surveyTypeId, QString filePath){
+
+
+void FileManager::ImportFile(bool pathIsSet){
+    QUrl selectedFile;
+    if(!pathIsSet)
+    {
+         QUrl StartDir("~/Documents");
+
+         selectedFile= QFileDialog::getOpenFileUrl(0, "Bitte Datenbank auswählen", StartDir,"CSV Files (*.csv)" );
+
+    }
+
+    filePath = selectedFile.path();
+
+    // OPEN DATA INPUT WINDOW
+    newPopup = new DataInputPopup(0);
+    CalcWindow::connect (newPopup, SIGNAL(ok_clicked()),0, SLOT(newImport()));
+    newPopup->show();
+
+    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
+}
+
+
+void FileManager::newImport(){
     bool success=false;
 
     vector <QString> questionTypes;
-    getQuestionTypesFromDb(questionTypes,surveyTypeId, false);
+    getQuestionTypesFromDb(questionTypes,newPopup->getSurveyType(), false);
 
-    Import *import = new Import(dbMan, location,date,surveyTypeId,questionTypes, filePath);
+    Import *import = new Import(dbMan, newPopup->getLocation(), newPopup->getDate(), newPopup->getSurveyType(), questionTypes, filePath);
     success = import-> getSuccess();
 
-    return success;
+    newPopup->close();
+    delete newPopup;
+    if (!success){
+        ImportFile(true);
 
-
+    }
 }
+
 
 
 bool FileManager::newCalculation(int surveyId){

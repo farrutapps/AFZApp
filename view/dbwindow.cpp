@@ -6,9 +6,9 @@
 #include "QFileDialog"
 #include "model/import.h"
 
-DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
+DbWindow::DbWindow(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DbWindow), dbMan(dbManager)
+    ui(new Ui::DbWindow)
 {
     ui->setupUi(this);
     setupTable();
@@ -17,7 +17,7 @@ DbWindow::DbWindow(QWidget *parent, DbManager *dbManager) :
     setupCombo();
     
 
-    connect (dbMan,SIGNAL(databaseChanged()),this,SLOT(updateTableContent()));
+
     connect (ui->DbTable, SIGNAL(cellDoubleClicked(int,int)),this,SLOT(on_ActionButton_clicked()));
 
 }
@@ -54,7 +54,7 @@ void DbWindow::updateTableContent(){
     ui->DbTable->horizontalHeader()->setStretchLastSection(false); 
 
     int numberOfSurveys;
-    if (fMan->surveysFromDbToModel(numberOfSurveys)){
+    if (FileManager::surveysFromDbToModel(numberOfSurveys)){
 
         vector<QString> surveyFacts;
 
@@ -62,7 +62,7 @@ void DbWindow::updateTableContent(){
             for (int j=0; j<numberOfSurveys;++j){
 
                 surveyFacts.clear();
-                fMan->getSurveyFacts(surveyFacts,j);
+                FileManager::getSurveyFacts(surveyFacts,j);
 
                 // -1 in order to write surveyID behind first cell
                 for(int i=0; i<surveyFacts.size()-1; ++i){
@@ -97,7 +97,7 @@ void DbWindow::on_ActionButton_clicked(){
     switch(ui->ActionCombo->currentIndex()){
 
         case 0:
-            fMan->newCalculation(surveyId);
+            FileManager::newCalculation(surveyId);
         
         break;
 
@@ -123,35 +123,9 @@ void DbWindow::deleteSurvey(QString survey_id){
 
 }
 
-void DbWindow::on_FindPathButton_clicked(bool path_is_set){
-
-
-    if(!path_is_set)
-    {QUrl StartDir("~/Documents");
-         selectedFile = QFileDialog::getOpenFileUrl(this, "Bitte Datenbank auswählen", StartDir,"CSV Files (*.csv)" );
-
-    }
-
-    // OPEN DATA INPUT WINDOW
-    newPopup = new DataInputPopup(0,dbMan);
-    connect (newPopup, SIGNAL(ok_clicked()),this, SLOT(newImport()));
-    newPopup->show();
-
-    // As soon as user clicks ok in the popup window, DbWindow::SaveToDatabase() is called.
-}
-
-
-void DbWindow::newImport(){
-
-    if (fMan->newImport(newPopup->getLocation(),newPopup->getDate(),newPopup->getSurveyType(),selectedFile.path())){
-        newPopup->close();
-        updateTableContent();
-    }
-
-    else {
-        newPopup->close();
-        on_FindPathButton_clicked(true);
-    }
+void DbWindow::on_FindPathButton_clicked(){
+    FileManager::ImportFile(false);
+    updateTableContent();
 }
 
 

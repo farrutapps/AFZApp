@@ -27,10 +27,10 @@ QGridLayout *mainLayout = new QGridLayout(CentralWidget);
 mainLayout->addWidget(Tabs);
 
 //connect to database
-DbManager *db_man= new DbManager("/Users/Sebastian/Documents/CPP/AFZ/Feedbacker/database/fb_database.db");
 
 
-QWidget *NewDbWindow= new DbWindow(this,db_man);
+
+QWidget *NewDbWindow= new DbWindow(this);
 //QWidget *FlexibleTab = new flexiblesurvey();
 
 

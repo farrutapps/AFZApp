@@ -13,6 +13,7 @@
 #include "model/import.h"
 #include <fstream>
 #include <cassert>
+#include <view/datainputpopup.h>
 
 
 
@@ -43,24 +44,27 @@ public:
 
     static bool newCalculation(int surveyId);
 
-
+    static void getSurveyTypes(vector <QString> &surveyTypes);
 
     static Survey *getCurrentSurvey();
+    static void ImportFile(bool pathIsSet=true);
 
 private:
-    static QString filePath;
+    static DataInputPopup *newPopup;
     
     static DbManager *dbMan;
-
+    static QString filePath;
 
     static vector <Survey> surveys;
     static Survey *currentSurvey;
+
 
 signals:
 
 public slots:
     static void importButtonClicked(bool path_is_set = 0);
-    static bool newImport(QString location, QString date, int surveyTypeId, QString filePath);
+    static void newImport();
+
 };
 
 #endif // FILEMANAGER_H

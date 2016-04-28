@@ -2,10 +2,10 @@
 #include "ui_DataInputPopup.h"
 
 
-DataInputPopup::DataInputPopup(QWidget *parent, DbManager *databaseManager) :
+DataInputPopup::DataInputPopup(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DataInputPopup),
-    dbMan(databaseManager)
+    ui(new Ui::DataInputPopup)
+
 {
     ui->setupUi(this);
     ui->OkButton->setEnabled(false);
@@ -26,16 +26,16 @@ DataInputPopup::~DataInputPopup()
 
 void DataInputPopup::setupCombo(){
 
+    FileManager::getSurveyTypes(surveyTypes);
 
-    dbMan->selectSingleQuery("SELECT surveytype_name FROM surveytypes", "surveytype_name", surveytypes);
 
 
-    for(int i =0; i<surveytypes.size();++i){
-    ui->SurveyTypeBox->addItem(surveytypes[i]);
+    for(int i =0; i<surveyTypes.size();++i){
+    ui->SurveyTypeBox->addItem(surveyTypes[i]);
     }
 
     ui->SurveyTypeBox->addItem("-- Bitte Seminartyp auswählen --");
-    ui->SurveyTypeBox->setCurrentIndex(surveytypes.size());
+    ui->SurveyTypeBox->setCurrentIndex(surveyTypes.size());
 }
 
 int DataInputPopup::getSurveyType(){
@@ -61,7 +61,7 @@ void DataInputPopup::on_CancelButton_clicked(){
 }
 
 void DataInputPopup::on_SurveyTypeBox_currentIndexChanged(int index){
-    if (index!=surveytypes.size() && ui->LocationInput->toPlainText()!="")
+    if (index!=surveyTypes.size() && ui->LocationInput->toPlainText()!="")
         ui->OkButton->setEnabled(true);
 
     else ui->OkButton->setEnabled(false);
