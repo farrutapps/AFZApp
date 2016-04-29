@@ -21,10 +21,12 @@ SOURCES += main.cpp\
     view/calcwindow.cpp \
     view/datainputpopup.cpp \
     view/preferenceswindow.cpp \
-    model/question.cpp \
+    model/questions/question.cpp \
     model/survey.cpp \
     model/import.cpp \
-    controller/controller.cpp
+    controller/controller.cpp \
+    model/questions/basequestion.cpp \
+    model/questions/qmeanvalue.cpp
 
 HEADERS  += model/dbmanager.h \
     view/dbwindow.h \
@@ -33,11 +35,13 @@ HEADERS  += model/dbmanager.h \
     view/calcwindow.h \
     view/datainputpopup.h \
     view/preferenceswindow.h \
-    model/question.h \
+    model/questions/question.h \
     model/survey.h \
     model/constants.h \
     model/import.h \
-    controller/controller.h
+    controller/controller.h \
+    model/questions/basequestion.h \
+    model/questions/qmeanvalue.h
 
 FORMS    += view/mainwindow.ui \
    view/flexiblesurvey.ui \
