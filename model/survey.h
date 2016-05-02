@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "question.h"
+#include "model/questions/question.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "model/question.h"
+#include "model/questions/question.h"
 
 
 Question::Question()
@@ -310,13 +310,7 @@ vector <int> Question::getData(){
     return data;
 }
 
-int Question::getId(){
-    return ID;
-}
 
-void Question::write_ID(int id){
-    ID=id;
-}
 
 QString Question::getSubQuestion(){
     return subQuestion;

@@ -1,6 +1,6 @@
 #include "import.h"
 #include "model/dbmanager.h"
-#include "question.h"
+#include "model/questions/question.h"
 
 #include <QMessageBox>
 
@@ -117,13 +117,13 @@ bool Import::datamatrixToQuestions(){
 
             else
                 tempQuestion->setTextAnswersFromStdStringMatrix(dataMatrix,i);
-
+/*
             if(tempQuestion->getQuestion()!="")
                 ++id;
 
 
             tempQuestion->write_ID(id);      // a question and its subquestions share the same id
-
+*/
             questions.push_back(*tempQuestion);
             delete tempQuestion;
             }

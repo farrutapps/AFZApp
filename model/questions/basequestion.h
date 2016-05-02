@@ -3,9 +3,11 @@
 
 #include <QWidget>
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 template<class T>
-
 class BaseQuestion
 {
 protected:
@@ -17,7 +19,7 @@ protected:
     QString calculation;
 
 public:
-    BaseQuestion();
+    BaseQuestion(QString  question_input, QString subquestion_input, vector <T> & data_input);
 
     QString getQuestion() const;
     void setQuestion(const QString &value);
@@ -29,9 +31,9 @@ public:
     void setQuestionType(int value);
 
     // statistical methods
-    double meanValue(vector<int> &data);
-    double shareOfNonZeros(vector<int> &data);
-    double shareOfInput(vector<int> &data, int answer);
+    double meanValue();
+    double shareOfNonZeros();
+    double shareOfInput(int answer);
 
     virtual void setDataFromStdStringMatrix(vector <vector <string> >  &datamat, int q_index);
     virtual QString getCalculation() =0;

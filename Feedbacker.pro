@@ -26,7 +26,10 @@ SOURCES += main.cpp\
     model/import.cpp \
     controller/controller.cpp \
     model/questions/basequestion.cpp \
-    model/questions/qmeanvalue.cpp
+    model/questions/qmeanvalue.cpp \
+    model/questions/qagreement.cpp \
+    model/questions/qgender.cpp \
+    model/questions/qage.cpp
 
 HEADERS  += model/dbmanager.h \
     view/dbwindow.h \
@@ -41,7 +44,10 @@ HEADERS  += model/dbmanager.h \
     model/import.h \
     controller/controller.h \
     model/questions/basequestion.h \
-    model/questions/qmeanvalue.h
+    model/questions/qmeanvalue.h \
+    model/questions/qagreement.h \
+    model/questions/qgender.h \
+    model/questions/qage.h
 
 FORMS    += view/mainwindow.ui \
    view/flexiblesurvey.ui \

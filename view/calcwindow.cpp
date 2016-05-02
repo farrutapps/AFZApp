@@ -3,7 +3,7 @@
 #include "ui_CalcWindow.h"
 #include <QFileDialog>
 #include <QInputDialog>
-#include <model/question.h>
+#include <model/questions/question.h>
 #include <fstream>
 #include <view/dbwindow.h>
 #include <QCloseEvent>

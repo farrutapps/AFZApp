@@ -1,5 +1,5 @@
 #include "controller/controller.h"
-#include "model/question.h"
+#include "model/questions/question.h"
 #include "model/dbmanager.h"
 #include "view/dbwindow.h"
 #include "QFileDialog"

@@ -1,12 +1,12 @@
 #include "basequestion.h"
 
-BaseQuestion::BaseQuestion()
-{
-
-}
-
 template <class T>
-double BaseQuestion<T>::meanValue(vector <int> &data){
+BaseQuestion<T>::BaseQuestion(QString  question_input, QString subquestion_input, vector <T> & data_input) : question(question_input), subQuestion(subquestion_input)
+{
+    data=data_input;
+}
+template <class T>
+double BaseQuestion<T>::meanValue(){
     double result;
     double sum=0;
 
@@ -28,7 +28,7 @@ double BaseQuestion<T>::meanValue(vector <int> &data){
 }
 
 template <class T>
-double BaseQuestion<T>::shareOfNonZeros(vector <int> &data){
+double BaseQuestion<T>::shareOfNonZeros(){
 
     int counter=0;
     double share=0;
@@ -46,7 +46,7 @@ double BaseQuestion<T>::shareOfNonZeros(vector <int> &data){
 }
 
 template <class T>
-double BaseQuestion<T>::shareOfInput(vector<int> &data, int answer){
+double BaseQuestion<T>::shareOfInput(int answer){
     int counter=0;
 
     for (int i=0; i<data.size();++i){
@@ -60,9 +60,6 @@ double BaseQuestion<T>::shareOfInput(vector<int> &data, int answer){
 
 template <class T>
 void BaseQuestion<T>::setDataFromStdStringMatrix(vector<vector<string> > & datamat, int q_index){
-
-
-
 
     for (int i=2; i<datamat.size(); ++i){
 

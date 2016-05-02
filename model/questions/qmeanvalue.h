@@ -1,20 +1,17 @@
 #ifndef QMEANVALUE_H
 #define QMEANVALUE_H
 #include "basequestion.h"
+#include "basequestion.cpp"
 
 #include <vector>
 
-class QMeanValue : public BaseQuestion
+class QMeanValue : public BaseQuestion<int>
 {
-protected:
-    vector<int> data;
 
 public:
-    QMeanValue(QString question_input, QString subquestion_input, vector<int> &data_input, int questiontype_input);
+    QMeanValue(QString  question_input, QString subquestion_input, vector <int> & data_input);
 
     QString getCalculation();
-
-
 
 public slots:
 };

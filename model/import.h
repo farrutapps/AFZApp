@@ -4,7 +4,7 @@
 #include <iostream>
 #include <QUrl>
 #include <vector>
-#include <model/question.h>
+#include <model/questions/question.h>
 #include <fstream>
 #include <model/dbmanager.h>
 

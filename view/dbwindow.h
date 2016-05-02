@@ -5,7 +5,7 @@
 #include <QMessageBox>
 #include <QUrl>
 #include "model/dbmanager.h"
-#include "model/question.h"
+#include "model/questions/question.h"
 #include "controller/controller.h"
 #include "view/calcwindow.h"
 

@@ -1,7 +1,7 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include "model/question.h"
+#include "model/questions/question.h"
 #include "model/dbmanager.h"
 #include "model/survey.h"
 #include "model/import.h"

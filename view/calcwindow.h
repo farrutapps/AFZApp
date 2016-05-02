@@ -7,7 +7,7 @@ using namespace std;
 #include <fstream>
 #include <cassert>
 
-#include "model/question.h"
+#include "model/questions/question.h"
 #include "model/survey.h"
 # include "model/dbmanager.h"
 #include "controller/controller.h"
